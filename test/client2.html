@@ -1,0 +1,18 @@
+<!doctype html>
+<head>
+  <title>Cross Storage Hub</title>
+</head>
+<body>
+  <script type="text/javascript" src="../lib/client.js"></script>
+  <script>
+    var crossStorage = new CrossStorageClient('http://localhost:3000/test/hub.html');
+
+    crossStorage.onConnect().then(function() {
+      return crossStorage.get('key1');
+    }).then(function(res) {
+      console.log(res); // 'foo'
+    }).catch(function(err) {
+      console.log(err);
+    });
+  </script>
+</html>
