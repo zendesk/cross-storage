@@ -34,5 +34,6 @@ For compatibility with older browsers, simply load a Promise polyfill such as
 <script src="http://s3.amazonaws.com/es6-promises/promise-1.0.0.min.js"></script>
 ```
 
-Supports IE8 and up using the above polyfill. A JSON polyfill is also required
+You can also use RSVP or any other ES6 compliant promise library. Supports IE8
+and up using the above polyfill. A JSON polyfill is also required
 for IE8 in Compatibility View.

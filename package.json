@@ -1,0 +1,26 @@
+{
+  "name": "cross-storage",
+  "version": "0.0.0",
+  "description": "Cross domain local storage",
+  "keywords": [
+    "local",
+    "storage",
+    "cross",
+    "domain"
+  ],
+  "author": "Daniel St. Jules <danielst.jules@gmail.com>",
+  "licenses": [
+    "MIT"
+  ],
+  "homepage": "https://github.com/zendesk/cross-storage",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zendesk/cross-storage.git"
+  },
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-jshint": "^1.8.4",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^0.3.1"
+  }
+}
