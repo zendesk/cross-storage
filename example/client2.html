@@ -1,0 +1,18 @@
+<!doctype html>
+<head>
+  <title>Cross Storage Hub</title>
+</head>
+<body>
+  <script type="text/javascript" src="https://s3.amazonaws.com/es6-promises/promise-1.0.0.min.js"></script>
+  <script type="text/javascript" src="../dist/client.js"></script>
+  <script type="text/javascript">
+    var storage = new CrossStorageClient('http://localhost:3000/example/hub.html');
+
+    storage.onConnect()
+    .then(function() {
+      return storage.get('key1', 'key2');
+    }).then(function(res) {
+      console.log(res); // ['foo', 'bar']
+    });
+  </script>
+</html>

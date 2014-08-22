@@ -11,15 +11,15 @@ CrossStorageHub.init(/.*\.example.com$/);
 Client
 
 ``` javascript
-var crossStorage = new CrossStorageClient('https://example.com/hub.html');
+var storage = new CrossStorageClient('https://example.com/hub.html');
 
-crossStorage.onConnect().then(function() {
+storage.onConnect().then(function() {
   // Set a key with a TTL of 90 seconds
-  return crossStorage.set('newKey', 'foobar', 90000);
+  return storage.set('newKey', 'foobar', 90000);
 }).then(function() {
-  return crossStorage.get('existingKey', 'newKey');
+  return storage.get('existingKey', 'newKey');
 }).then(function(res) {
-  console.log(res[0], res[1]);
+  console.log(res.length); // 2
 }).catch(function(err) {
   // Handle error
 });
