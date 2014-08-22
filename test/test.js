@@ -36,7 +36,7 @@ describe('CrossStorageClient', function() {
   });
 
   describe('onConnect', function() {
-    it('returns a promise that is resolved when when connected', function(done) {
+    it('returns a promise that is resolved when connected', function(done) {
       storage.onConnect().then(done);
     });
 
@@ -52,7 +52,93 @@ describe('CrossStorageClient', function() {
         if (!invoked) return done();
 
         done(new Error('onConnect fired without connecting'));
-      }, 200);
+      }, 100);
+    });
+  });
+
+  describe('set', function() {
+    beforeEach(function(done) {
+      // Delete keys before each test
+      storage.onConnect().then(function() {
+        return storage.del('key1', 'key2');
+      }).then(function() {
+        done();
+      }).catch(done);
+    });
+
+    it('sets a key to the specified value', function(done) {
+      var key = 'key1';
+
+      storage.onConnect().then(function() {
+        return storage.set(key, 'foo');
+      }).then(function() {
+        return storage.get(key);
+      }).then(function(res) {
+        expect(res).to.be('foo');
+        done();
+      }).catch(done);
+    });
+
+    it('can set objects as the value', function(done) {
+      var key = 'key1';
+      var object = {foo: 'bar'};
+
+      storage.onConnect().then(function() {
+        return storage.set(key, object);
+      }).then(function() {
+        return storage.get(key);
+      }).then(function(res) {
+        expect(res).to.eql(object);
+        done();
+      }).catch(done);
+    });
+
+    it('can overwrite existing values', function(done) {
+      var key = 'key1';
+      var value = 'new';
+
+      storage.onConnect().then(function() {
+        return storage.set(key, 'old');
+      }).then(function() {
+        return storage.set(key, value);
+      }).then(function() {
+        return storage.get(key);
+      }).then(function(res) {
+        expect(res).to.eql(value);
+        done();
+      }).catch(done);
+    });
+
+    it('can set a ttl on the key', function(done) {
+      var key = 'key1';
+      var value = 'foobar';
+
+      var initialSet = function() {
+        // Set the initial value and verify
+        return storage.set(key, value, 50).then(function() {
+          return storage.get(key);
+        }).then(function(res) {
+          expect(res).to.be(value);
+        });
+      };
+
+      var delay = function() {
+        // Delay by 100ms
+        return new Promise(function(resolve, reject) {
+          setTimeout(resolve, 100);
+        });
+      };
+
+      storage.onConnect().then(function() {
+        return initialSet();
+      }).then(function() {
+        return delay();
+      }).then(function() {
+        return storage.get(key);
+      }).then(function(res) {
+        expect(res).to.be(null);
+        done();
+      }).catch(done);
     });
   });
 });
