@@ -127,9 +127,9 @@ CrossStorageClient.prototype._installListener = function() {
         client._requests.connect();
         delete client._requests.connect;
       }
-
-      if (message.data === 'ready') return;
     }
+
+    if (message.data === 'ready') return;
 
     // All other messages
     var response = JSON.parse(message.data);

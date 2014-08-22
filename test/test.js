@@ -12,16 +12,27 @@ describe('CrossStorageClient', function() {
     };
   };
 
+  beforeEach(function(done) {
+    // Delete keys before each test
+    storage.onConnect().then(function() {
+      return storage.del('key1', 'key2');
+    })
+    .then(done)
+    .catch(done);
+  });
+
   describe('Constructor', function() {
     it('parses the passed url and stores its origin', function() {
       expect(storage._origin).to.be('http://localhost:8080');
     });
 
     it('sets its connected status to false', function() {
+      var storage = new CrossStorageClient(url);
       expect(storage._connected).to.be(false);
     });
 
     it('initializes _requests as an empty object', function() {
+      var storage = new CrossStorageClient(url);
       expect(storage._requests).to.eql({});
     });
 
@@ -64,74 +75,97 @@ describe('CrossStorageClient', function() {
     });
   });
 
-  describe('set', function() {
-    beforeEach(function(done) {
-      // Delete keys before each test
-      storage.onConnect().then(function() {
-        return storage.del('key1', 'key2');
-      })
-      .then(done)
-      .catch(done);
-    });
+  it('can set a key to the specified value', function(done) {
+    var key = 'key1';
+    var value = 'foo';
 
-    it('sets a key to the specified value', function(done) {
-      var key = 'key1';
-      var value = 'foo';
+    storage.onConnect()
+    .then(setGet(key, value))
+    .then(function(res) {
+      expect(res).to.eql(value);
+      done();
+    }).catch(done);
+  });
 
-      storage.onConnect()
-      .then(setGet(key, value))
-      .then(function(res) {
-        expect(res).to.eql(value);
-        done();
-      }).catch(done);
-    });
+  it('can set objects as the value', function(done) {
+    var key = 'key1';
+    var object = {foo: 'bar'};
 
-    it('can set objects as the value', function(done) {
-      var key = 'key1';
-      var object = {foo: 'bar'};
+    storage.onConnect()
+    .then(setGet(key, object))
+    .then(function(res) {
+      expect(res).to.eql(object);
+      done();
+    }).catch(done);
+  });
 
-      storage.onConnect()
-      .then(setGet(key, object))
-      .then(function(res) {
-        expect(res).to.eql(object);
-        done();
-      }).catch(done);
-    });
+  it('can overwrite existing values', function(done) {
+    var key = 'key1';
+    var value = 'new';
 
-    it('can overwrite existing values', function(done) {
-      var key = 'key1';
-      var value = 'new';
+    storage.onConnect().then(function() {
+      return storage.set(key, 'old');
+    })
+    .then(setGet(key, value))
+    .then(function(res) {
+      expect(res).to.eql(value);
+      done();
+    }).catch(done);
+  });
 
-      storage.onConnect().then(function() {
-        return storage.set(key, 'old');
-      })
-      .then(setGet(key, value))
-      .then(function(res) {
-        expect(res).to.eql(value);
-        done();
-      }).catch(done);
-    });
+  it('can set a ttl on the key', function(done) {
+    var key = 'key1';
+    var value = 'foobar';
 
-    it('can set a ttl on the key', function(done) {
-      var key = 'key1';
-      var value = 'foobar';
+    var delay = function() {
+      // Delay by 100ms
+      return new Promise(function(resolve, reject) {
+        setTimeout(resolve, 100);
+      });
+    };
 
-      var delay = function() {
-        // Delay by 100ms
-        return new Promise(function(resolve, reject) {
-          setTimeout(resolve, 100);
-        });
-      };
+    storage.onConnect()
+    .then(setGet(key, value, 50))
+    .then(delay)
+    .then(function() {
+      return storage.get(key);
+    }).then(function(res) {
+      expect(res).to.be(null);
+      done();
+    }).catch(done);
+  });
 
-      storage.onConnect()
-      .then(setGet(key, value, 50))
-      .then(delay)
-      .then(function() {
-        return storage.get(key);
-      }).then(function(res) {
-        expect(res).to.be(null);
-        done();
-      }).catch(done);
-    });
+  it('returns an array of values if get is passed multiple keys', function(done) {
+    var keys = ['key1', 'key2'];
+    var values = ['foo', 'bar'];
+
+    storage.onConnect()
+    .then(setGet(keys[0], values[0]))
+    .then(setGet(keys[1], values[1]))
+    .then(function() {
+      return storage.get(keys[0], keys[1]);
+    })
+    .then(function(res) {
+      expect(res).to.eql([values[0], values[1]]);
+      done();
+    }).catch(done);
+  });
+
+  it('can delete multiple keys', function(done) {
+    var keys = ['key1', 'key2'];
+    var values = ['foo', 'bar'];
+
+    storage.onConnect()
+    .then(setGet(keys[0], values[0]))
+    .then(setGet(keys[1], values[1]))
+    .then(function() {
+      return storage.del(keys[0], keys[1]);
+    }).then(function() {
+      return storage.get(keys[0], keys[1]);
+    })
+    .then(function(res) {
+      expect(res).to.eql([null, null]);
+      done();
+    }).catch(done);
   });
 });
