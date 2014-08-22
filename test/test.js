@@ -1,9 +1,17 @@
 var expect = require('expect.js');
 
-var url = 'http://localhost:8080/test/hub.html';
-var storage = new CrossStorageClient(url);
-
 describe('CrossStorageClient', function() {
+  var url = 'http://localhost:8080/test/hub.html';
+  var storage = new CrossStorageClient(url);
+
+  var setGet = function(key, value, ttl) {
+    return function() {
+      return storage.set(key, value, ttl).then(function() {
+        return storage.get(key);
+      });
+    };
+  };
+
   describe('Constructor', function() {
     it('parses the passed url and stores its origin', function() {
       expect(storage._origin).to.be('http://localhost:8080');
@@ -68,13 +76,12 @@ describe('CrossStorageClient', function() {
 
     it('sets a key to the specified value', function(done) {
       var key = 'key1';
+      var value = 'foo';
 
-      storage.onConnect().then(function() {
-        return storage.set(key, 'foo');
-      }).then(function() {
-        return storage.get(key);
-      }).then(function(res) {
-        expect(res).to.be('foo');
+      storage.onConnect()
+      .then(setGet(key, value))
+      .then(function(res) {
+        expect(res).to.eql(value);
         done();
       }).catch(done);
     });
@@ -83,11 +90,9 @@ describe('CrossStorageClient', function() {
       var key = 'key1';
       var object = {foo: 'bar'};
 
-      storage.onConnect().then(function() {
-        return storage.set(key, object);
-      }).then(function() {
-        return storage.get(key);
-      }).then(function(res) {
+      storage.onConnect()
+      .then(setGet(key, object))
+      .then(function(res) {
         expect(res).to.eql(object);
         done();
       }).catch(done);
@@ -99,11 +104,9 @@ describe('CrossStorageClient', function() {
 
       storage.onConnect().then(function() {
         return storage.set(key, 'old');
-      }).then(function() {
-        return storage.set(key, value);
-      }).then(function() {
-        return storage.get(key);
-      }).then(function(res) {
+      })
+      .then(setGet(key, value))
+      .then(function(res) {
         expect(res).to.eql(value);
         done();
       }).catch(done);
@@ -113,15 +116,6 @@ describe('CrossStorageClient', function() {
       var key = 'key1';
       var value = 'foobar';
 
-      var initialSet = function() {
-        // Set the initial value and verify
-        return storage.set(key, value, 50).then(function() {
-          return storage.get(key);
-        }).then(function(res) {
-          expect(res).to.be(value);
-        });
-      };
-
       var delay = function() {
         // Delay by 100ms
         return new Promise(function(resolve, reject) {
@@ -130,7 +124,7 @@ describe('CrossStorageClient', function() {
       };
 
       storage.onConnect()
-      .then(initialSet)
+      .then(setGet(key, value, 50))
       .then(delay)
       .then(function() {
         return storage.get(key);
