@@ -61,9 +61,9 @@ describe('CrossStorageClient', function() {
       // Delete keys before each test
       storage.onConnect().then(function() {
         return storage.del('key1', 'key2');
-      }).then(function() {
-        done();
-      }).catch(done);
+      })
+      .then(done)
+      .catch(done);
     });
 
     it('sets a key to the specified value', function(done) {
@@ -129,11 +129,10 @@ describe('CrossStorageClient', function() {
         });
       };
 
-      storage.onConnect().then(function() {
-        return initialSet();
-      }).then(function() {
-        return delay();
-      }).then(function() {
+      storage.onConnect()
+      .then(initialSet)
+      .then(delay)
+      .then(function() {
         return storage.get(key);
       }).then(function(res) {
         expect(res).to.be(null);
