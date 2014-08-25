@@ -2,7 +2,7 @@
   "name": "cross-storage",
   "version": "0.0.0",
   "description": "Cross domain local storage",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "main": [
     "dist/client.js",
     "dist/hub.js"

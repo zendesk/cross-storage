@@ -10,7 +10,7 @@
   ],
   "author": "Daniel St. Jules <danielst.jules@gmail.com>",
   "licenses": [
-    "MIT"
+    "Apache-2.0"
   ],
   "homepage": "https://github.com/zendesk/cross-storage",
   "repository": {
