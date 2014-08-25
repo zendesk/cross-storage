@@ -84,7 +84,7 @@ CrossStorageHub._set = function(params) {
 
   item = {value:  params.value};
   if (ttl) {
-    item.expire = Date.now() + ttl;
+    item.expire = CrossStorageHub._now() + ttl;
   }
 
   window.localStorage.setItem(params.key, JSON.stringify(item));
@@ -111,7 +111,7 @@ CrossStorageHub._get = function(params) {
 
     if (item === null) {
       result.push(null);
-    } else if (item.expire && item.expire < Date.now()) {
+    } else if (item.expire && item.expire < CrossStorageHub._now()) {
       storage.removeItem(key);
       result.push(null);
     } else {
@@ -148,4 +148,18 @@ CrossStorageHub._inArray = function(value, array) {
   }
 
   return false;
+};
+
+/**
+ * A cross-browser version of Date.now compatible with IE8 that avoids
+ * modifying the Date object.
+ *
+ * @return {int} The current timestamp in milliseconds
+ */
+CrossStorageHub._now = function() {
+  if (typeof Date.now === 'function') {
+    return Date.now();
+  }
+
+  return new Date().getTime();
 };
