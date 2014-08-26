@@ -7,12 +7,12 @@ browsers:
   - name: chrome
     version: 29..latest
     platform: Linux
-  - name: opera
-    version: latest
-    platform: Linux
+  # - name: opera
+  #   version: latest
+  #   platform: Linux
   - name: firefox
-    version: latest
-    platform: OS X 10.8
+    version: 29..latest
+    platform: Windows 7
   - name: safari
     version: 5
     platform: OS X 10.6
