@@ -6,12 +6,25 @@ scripts:
 browsers:
   - name: chrome
     version: 29..latest
+    platform: Linux
+  - name: opera
+    version: latest
+    platform: Linux
   - name: firefox
     version: latest
+    platform: OS X 10.8
   - name: safari
-    version: latest
+    version: 5
+    platform: OS X 10.6
+  - name: safari
+    version: 6
+    platform: OS X 10.7
+  - name: safari
+    version: 7
+    platform: OS X 10.8
   - name: ie
     version: 8..latest
+    platform: Windows 7
   - name: iphone
     version: 6.0..latest
   - name: android
