@@ -1,5 +1,7 @@
 var expect = require('expect.js');
 
+// Note: IE8 requires that catch be referenced as ['catch'] on a promise
+
 describe('CrossStorageClient', function() {
   // Increase timeouts
   this.timeout(10000);
@@ -21,7 +23,7 @@ describe('CrossStorageClient', function() {
       return storage.del('key1', 'key2');
     })
     .then(done)
-    .catch(done);
+    ['catch'](done);
   });
 
   describe('Constructor', function() {
@@ -89,7 +91,7 @@ describe('CrossStorageClient', function() {
     .then(function(res) {
       expect(res).to.eql(value);
       done();
-    }).catch(done);
+    })['catch'](done);
   });
 
   it('can set objects as the value', function(done) {
@@ -101,7 +103,7 @@ describe('CrossStorageClient', function() {
     .then(function(res) {
       expect(res).to.eql(object);
       done();
-    }).catch(done);
+    })['catch'](done);
   });
 
   it('can overwrite existing values', function(done) {
@@ -115,7 +117,7 @@ describe('CrossStorageClient', function() {
     .then(function(res) {
       expect(res).to.eql(value);
       done();
-    }).catch(done);
+    })['catch'](done);
   });
 
   it('can set a ttl on the key', function(done) {
@@ -137,7 +139,7 @@ describe('CrossStorageClient', function() {
     }).then(function(res) {
       expect(res).to.be(null);
       done();
-    }).catch(done);
+    })['catch'](done);
   });
 
   it('returns an array of values if get is passed multiple keys', function(done) {
@@ -153,7 +155,7 @@ describe('CrossStorageClient', function() {
     .then(function(res) {
       expect(res).to.eql([values[0], values[1]]);
       done();
-    }).catch(done);
+    })['catch'](done);
   });
 
   it('can delete multiple keys', function(done) {
@@ -171,6 +173,6 @@ describe('CrossStorageClient', function() {
     .then(function(res) {
       expect(res).to.eql([null, null]);
       done();
-    }).catch(done);
+    })['catch'](done);
   });
 });
