@@ -1,6 +1,9 @@
 var expect = require('expect.js');
 
 describe('CrossStorageClient', function() {
+  // Increase timeouts
+  this.timeout(10000);
+
   var url = location.origin + '/test/hub.html';
   var storage = new CrossStorageClient(url);
 
