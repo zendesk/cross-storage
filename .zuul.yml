@@ -16,8 +16,8 @@ browsers:
     version: 8..latest
   - name: android
     version: latest
-# - name: opera
-#   version: latest
-#   platform: Linux
-#  - name: iphone
-#    version: 6.0..latest
+  - name: opera
+    version: latest
+    platform: Linux
+  - name: iphone
+    version: 6.0..latest
