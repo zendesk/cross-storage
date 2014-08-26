@@ -25,7 +25,7 @@ browsers:
   - name: ie
     version: 8..latest
     platform: Windows 7
-  - name: iphone
-    version: 6.0..latest
+#  - name: iphone
+#    version: 6.0..latest
   - name: android
     version: latest
