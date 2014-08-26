@@ -6,9 +6,7 @@ describe('CrossStorageClient', function() {
   // Increase timeouts
   this.timeout(10000);
 
-  // location.origin is unavailable in IE
-  var uri = window.location;
-  var origin = uri.protocol + '//' + uri.host;
+  var origin = CrossStorageClient._getOrigin(window.location.href);
 
   var url = origin + '/test/hub.html';
   var storage = new CrossStorageClient(url);

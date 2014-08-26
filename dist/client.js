@@ -13,11 +13,8 @@
  * @property {Window} _hub       The hub window
  */
 function CrossStorageClient(url) {
-  var uri = document.createElement('a');
-  uri.href = url;
-
-  this._id        = CrossStorageClient.generateUUID();
-  this._origin    = uri.protocol + '//' + uri.host;
+  this._id        = CrossStorageClient._generateUUID();
+  this._origin    = CrossStorageClient._getOrigin(url);
   this._requests  = {};
   this._connected = false;
   this._count     = 0;
@@ -41,12 +38,35 @@ CrossStorageClient.frameStyle = {
 };
 
 /**
+ * Returns the origin of an url, with cross browser support. Accommodates
+ * the lack of location.origin in IE, as well as the discrepancies in the
+ * inclusion of the port when using the default port for a protocol, e.g.
+ * 443 over https.
+ *
+ * @param   {string} url The url to a cross storage hub
+ * @returns {string} The origin of the url
+ */
+CrossStorageClient._getOrigin = function(url) {
+  var uri, origin;
+
+  uri = document.createElement('a');
+  uri.href = url;
+
+  origin = uri.protocol + '//' + uri.host;
+  if (!window.location.port) {
+    origin = origin.replace(/:80|:443/, '');
+  }
+
+  return origin;
+};
+
+/**
  * UUID v4 generation, taken from: http://stackoverflow.com/questions/
  * 105034/how-to-create-a-guid-uuid-in-javascript/2117523#2117523
  *
  * @returns {string} A UUID v4 string
  */
-CrossStorageClient.generateUUID = function() {
+CrossStorageClient._generateUUID = function() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     var r = Math.random() * 16|0, v = c == 'x' ? r : (r&0x3|0x8);
 
