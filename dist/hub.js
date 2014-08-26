@@ -41,8 +41,11 @@ CrossStorageHub._installListener = function() {
 CrossStorageHub._listener = function(message) {
   var uri, available, request, error, result, response;
 
-  // Ignore messages not matching the pattern
+  // Ignore messages not matching the pattern, and the ready message
+  // when viewing the hub directly
   if (!CrossStorageHub._originPattern.test(message.origin)) {
+    return;
+  } else if (message.data === 'ready') {
     return;
   }
 
