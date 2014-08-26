@@ -5,4 +5,14 @@ scripts:
   - "lib/client.js"
 browsers:
   - name: chrome
+    version: 29..latest
+  - name: firefox
+    version: latest
+  - name: safari
+    version: latest
+  - name: ie
+    version: 8..latest
+  - name: iphone
+    version: 6.0..latest
+  - name: android
     version: latest
