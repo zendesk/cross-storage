@@ -1,12 +1,16 @@
 var expect = require('expect.js');
 
-// Note: IE8 requires that catch be referenced as ['catch'] on a promise
-
 describe('CrossStorageClient', function() {
+  // Note: IE8 requires that catch be referenced as ['catch'] on a promise
+
   // Increase timeouts
   this.timeout(10000);
 
-  var url = location.origin + '/test/hub.html';
+  // location.origin is unavailable in IE
+  var uri = window.location;
+  var origin = uri.protocol + '//' + uri.host;
+
+  var url = origin + '/test/hub.html';
   var storage = new CrossStorageClient(url);
 
   var setGet = function(key, value, ttl) {
@@ -28,7 +32,7 @@ describe('CrossStorageClient', function() {
 
   describe('Constructor', function() {
     it('parses the passed url and stores its origin', function() {
-      expect(storage._origin).to.be(location.origin);
+      expect(storage._origin).to.be(origin);
     });
 
     it('sets its connected status to false', function() {
