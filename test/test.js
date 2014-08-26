@@ -1,7 +1,7 @@
 var expect = require('expect.js');
 
 describe('CrossStorageClient', function() {
-  var url = 'http://localhost:8080/test/hub.html';
+  var url = location.origin + '/test/hub.html';
   var storage = new CrossStorageClient(url);
 
   var setGet = function(key, value, ttl) {
@@ -23,7 +23,7 @@ describe('CrossStorageClient', function() {
 
   describe('Constructor', function() {
     it('parses the passed url and stores its origin', function() {
-      expect(storage._origin).to.be('http://localhost:8080');
+      expect(storage._origin).to.be(location.origin);
     });
 
     it('sets its connected status to false', function() {
