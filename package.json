@@ -28,6 +28,7 @@
     "zuul": "^1.10.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/zuul --local 8080 --ui mocha-bdd -- test/test.js"
+    "test": "./node_modules/.bin/zuul --local 8080 --ui mocha-bdd -- test/test.js",
+    "saucetest": "./node_modules/.bin/zuul --ui mocha-bdd -- test/test.js"
   }
 }
