@@ -142,6 +142,16 @@ describe('CrossStorageClient', function() {
       cleanup(done);
     });
 
+    it('returns null when calling get on a non-existent key', function(done) {
+      storage.onConnect()
+      .then(function() {
+        return storage.get('key1');
+      }).then(function(res) {
+        expect(res).to.be(null);
+        done();
+      })['catch'](done);
+    });
+
     it('can set a key to the specified value', function(done) {
       var key = 'key1';
       var value = 'foo';
