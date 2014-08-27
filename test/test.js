@@ -2,7 +2,7 @@ var expect = require('expect.js');
 // Note: IE8 requires that catch be referenced as ['catch'] on a promise
 
 describe('CrossStorageClient', function() {
-  this.timeout(20000);
+  this.timeout(15000);
 
   var origin = CrossStorageClient._getOrigin(window.location.href);
   var url = origin + '/test/hub.html';
