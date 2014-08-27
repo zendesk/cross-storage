@@ -1,7 +1,17 @@
 language: node_js
 node_js:
-- '0.10'
-script: npm run saucetest
+  - '0.10'
+script:
+  # Running in batches to prevent overwhelming zuul,
+  # localtunnel, or saucelabs
+  - cp ./test/zuul/chrome.yml .zuul.yml
+  - npm run saucetest
+  - cp ./test/zuul/firefox.yml .zuul.yml
+  - npm run saucetest
+  - cp ./test/zuul/ie.yml .zuul.yml
+  - npm run saucetest
+  - cp ./test/zuul/other.yml .zuul.yml
+  - npm run saucetest
 env:
   global:
   - secure: SQ0QJ1xYmN0gPUsdxKw1y9Fw0HPw+cOVWs6OuSGIHGKnjrqtMPPMFU6fkRPi+vlMtFpHbwuYRmLn/aCrWZWBM1VKQlcFOIwicg2foyjbnvbWputcrt6jklUi9btda7TWwQFu00s2ikD0DokSjXW1PpMPm1fwWshlk+M0eo895jQ=
