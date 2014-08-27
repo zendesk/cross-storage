@@ -5,7 +5,7 @@ scripts:
   - "lib/client.js"
 browsers:
   - name: chrome
-    version: 29..latest
+    version: 34..latest
     platform: Linux
   - name: firefox
     version: 29..latest
