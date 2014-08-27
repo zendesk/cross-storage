@@ -79,10 +79,12 @@ CrossStorageHub.init([
 #### Class: CrossStorageClient
 
 Constructs a new cross storage client given the url to a hub. An iframe
-is created within the document body that points to the specified url.
+is created within the document body that points to the specified url. Also
+accepts an optional timeout in milliseconds to be used for each request.
+If not specified, it defaults to 3000ms.
 
 ``` javascript
-var storage = new CrossStorageClient('http://localhost:3000/example/hub.html');
+var storage = new CrossStorageClient('http://localhost:3000/example/hub.html', 2000);
 ```
 
 #### CrossStorageClient.prototype.onConnect

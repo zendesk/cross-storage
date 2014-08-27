@@ -6,7 +6,7 @@ describe('CrossStorageClient', function() {
 
   var origin = CrossStorageClient._getOrigin(window.location.href);
   var url = origin + '/test/hub.html';
-  var storage = new CrossStorageClient(url);
+  var storage = new CrossStorageClient(url, 5000);
 
   var setGet = function(key, value, ttl) {
     return function() {
@@ -85,24 +85,33 @@ describe('CrossStorageClient', function() {
     });
   });
 
-  describe('local storage functions', function() {
+  it('fails to make any requests not within its permissions', function(done) {
+    var url = origin + '/test/getOnlyHub.html';
+    var storage = new CrossStorageClient(url, 5000);
+
+    storage.onConnect().then(function() {
+      return storage.set('key1', 'new');
+    })['catch'](function(err) {
+      expect(err.message).to.be('Invalid permissions for set');
+      done();
+    });
+  });
+
+  it('fails to make any requests if not of an allowed origin', function(done) {
+    var url = origin + '/test/invalidOriginHub.html';
+    var storage = new CrossStorageClient(url, 5000);
+
+    storage.onConnect().then(function() {
+      return storage.set('key1', 'new');
+    })['catch'](function(err) {
+      expect(err.message).to.be('Invalid permissions for set');
+      done();
+    });
+  });
+
+  describe('given sufficient permissions', function() {
     beforeEach(function(done) {
       cleanup(done);
-    });
-
-    it('fail if not given the necessary permissions', function(done) {
-      // Avoid timing out from rendering a new HTML page
-      this.timeout(40000);
-
-      var url = origin + '/test/getOnlyHub.html';
-      var storage = new CrossStorageClient(url);
-
-      storage.onConnect().then(function() {
-        return storage.set('key1', 'new');
-      })['catch'](function(err) {
-        expect(err.message).to.be('Invalid permissions for set');
-        done();
-      });
     });
 
     it('can set a key to the specified value', function(done) {

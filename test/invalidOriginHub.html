@@ -1,0 +1,14 @@
+<!doctype html>
+<head>
+  <title>Cross Storage Hub</title>
+</head>
+<body>
+  <script type="text/javascript" src="../lib/hub.js"></script>
+  <script>
+    CrossStorageHub.init([
+      {origin: /^someOtherOrigin$/, allow: ['get', 'set', 'del']}
+    ]);
+
+    window.localStorage.setItem('key1', JSON.stringify({value: 'original'}));
+  </script>
+</html>
