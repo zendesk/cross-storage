@@ -23,7 +23,7 @@ describe('CrossStorageClient', function() {
       window.attachEvent('onmessage', next);
     }
 
-    storage = new CrossStorageClient(url, 10000);
+    storage = new CrossStorageClient(url, {timeout: 10000});
   });
 
   // Cleanup old iframes
@@ -56,6 +56,10 @@ describe('CrossStorageClient', function() {
   describe('Constructor', function() {
     it('parses the passed url and stores its origin', function() {
       expect(storage._origin).to.be(origin);
+    });
+
+    it('sets _timeout to opts.timeout, if provided', function() {
+      expect(storage._timeout).to.be(10000);
     });
 
     it('sets its connected status to false', function() {
@@ -115,7 +119,7 @@ describe('CrossStorageClient', function() {
 
   it('fails to make any requests not within its permissions', function(done) {
     var url = origin + '/test/getOnlyHub.html';
-    var storage = new CrossStorageClient(url, 50000);
+    var storage = new CrossStorageClient(url, {timeout: 50000});
 
     storage.onConnect().then(function() {
       return storage.set('key1', 'new');
@@ -127,7 +131,7 @@ describe('CrossStorageClient', function() {
 
   it('fails to make any requests if not of an allowed origin', function(done) {
     var url = origin + '/test/invalidOriginHub.html';
-    var storage = new CrossStorageClient(url, 50000);
+    var storage = new CrossStorageClient(url, {timeout: 50000});
 
     storage.onConnect().then(function() {
       return storage.set('key1', 'new');

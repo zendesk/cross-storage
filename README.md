@@ -42,7 +42,7 @@ invalid.example.com.malicious.com.
 **Client**
 
 ``` javascript
-var storage = new CrossStorageClient('https://storage.example.com/hub.html');
+var storage = new CrossStorageClient('https://store.example.com/hub.html');
 
 storage.onConnect().then(function() {
   // Set a key with a TTL of 90 seconds
@@ -80,15 +80,23 @@ CrossStorageHub.init([
 ]);
 ```
 
-#### new CrossStorageClient(url, [timeout])
+#### new CrossStorageClient(url, [opts])
 
-Constructs a new cross storage client given the url to a hub. An iframe
-is created within the document body that points to the specified url. Also
-accepts an optional timeout in milliseconds to be used for each request.
-If not specified, it defaults to 3000ms.
+Constructs a new cross storage client given the url to a hub. By default,
+an iframe is created within the document body that points to the url. It
+also accepts an options object, which may include a timeout and frameId. The
+timeout, in milliseconds, is applied to each request and defaults to 3000ms.
+The options object may also include a frameId, identifying an existing frame
+on which to install its listeners. If specified, the connection is assumed
+to have been successful.
 
 ``` javascript
-var storage = new CrossStorageClient('http://localhost:3000/example/hub.html', 2000);
+var storage = new CrossStorageClient('http://localhost:3000/hub.html');
+
+var storage = new CrossStorageClient('http://localhost:3000/hub.html', {
+  timeout: 5000,
+  frameId: 'storageFrame'
+});
 ```
 
 #### CrossStorageClient.prototype.onConnect
