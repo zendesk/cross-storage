@@ -5,6 +5,8 @@
 <body>
   <script type="text/javascript" src="../lib/hub.js"></script>
   <script>
-    CrossStorageHub.init(/.*/);
+    CrossStorageHub.init([
+      {origin: /.*/, allow: ['get', 'set', 'del']}
+    ]);
   </script>
 </html>

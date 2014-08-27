@@ -24,10 +24,14 @@ clients whose origin does not match the pattern are ignored.
 **Hub**
 
 ``` javascript
-CrossStorageHub.init(/.*\.example.com$/);
+// Config s.t. subdomain can get, but only root domain can set and del
+CrossStorageHub.init([
+  {origin: /\.example.com$/,        allow: ['get']},
+  {origin: /:(www\.)?example.com$/, allow: ['set', 'del']}
+]);
 ```
 
-Note the $ for matching the end of the string. The RegExp in the above example
+Note the $ for matching the end of the string. The RegExps in the above example
 will match origins such as valid.example.com, but not
 invalid.example.com.malicious.com.
 
@@ -60,12 +64,16 @@ bower install cross-storage
 
 #### CrossStorageHub.init
 
-Initializes the cross storage hub to accept requests from any origin
-matching the specified RegExp. A 'ready' message is sent to the parent
-window once complete.
+Accepts an array of objects with two keys: origin and allow. The value
+of origin is expected to be a RegExp, and allow, an array of strings.
+The cross storage hub is then initialized to accept requests from any of
+the matching origins, allowing access to the associated lists of methods.
+A 'ready' message is sent to the parent window once complete.
 
 ``` javascript
-CrossStorageHub.init(/localhost:3000$/);
+CrossStorageHub.init([
+  {origin: /localhost:3000$/, allow: ['get', 'set', 'del']}
+]);
 ```
 
 #### Class: CrossStorageClient
@@ -161,9 +169,13 @@ eventual easy integration with SauceLabs for multi-browser testing.
 
 Copyright 2014 Zendesk
 
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License.
 You may obtain a copy of the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
