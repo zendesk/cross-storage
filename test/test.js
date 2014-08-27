@@ -1,13 +1,10 @@
 var expect = require('expect.js');
+// Note: IE8 requires that catch be referenced as ['catch'] on a promise
 
 describe('CrossStorageClient', function() {
-  // Note: IE8 requires that catch be referenced as ['catch'] on a promise
-
-  // Increase timeouts
   this.timeout(10000);
 
   var origin = CrossStorageClient._getOrigin(window.location.href);
-
   var url = origin + '/test/hub.html';
   var storage = new CrossStorageClient(url);
 
@@ -91,6 +88,18 @@ describe('CrossStorageClient', function() {
   describe('local storage functions', function() {
     beforeEach(function(done) {
       cleanup(done);
+    });
+
+    it('fail if not given the necessary permissions', function(done) {
+      var url = origin + '/test/getOnlyHub.html';
+      var storage = new CrossStorageClient(url);
+
+      storage.onConnect().then(function() {
+        return storage.set('key1', 'new');
+      })['catch'](function(err) {
+        expect(err.message).to.be('Invalid permissions for set');
+        done();
+      });
     });
 
     it('can set a key to the specified value', function(done) {
