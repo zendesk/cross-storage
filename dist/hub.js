@@ -50,6 +50,11 @@ CrossStorageHub._installListener = function() {
 CrossStorageHub._listener = function(message) {
   var uri, available, request, error, result, response;
 
+  // Handle polling for a ready message
+  if (message.data === 'poll') {
+    return window.parent.postMessage('ready', message.origin);
+  }
+
   // Ignore the ready message when viewing the hub directly
   if (message.data === 'ready') return;
   request = JSON.parse(message.data);

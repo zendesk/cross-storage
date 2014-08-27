@@ -87,8 +87,7 @@ an iframe is created within the document body that points to the url. It
 also accepts an options object, which may include a timeout and frameId. The
 timeout, in milliseconds, is applied to each request and defaults to 3000ms.
 The options object may also include a frameId, identifying an existing frame
-on which to install its listeners. If specified, the connection is assumed
-to have been successful.
+on which to install its listeners.
 
 ``` javascript
 var storage = new CrossStorageClient('http://localhost:3000/hub.html');
