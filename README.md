@@ -1,6 +1,6 @@
 # cross-storage
 
-Cross domain local storage. Features an API using ES6 promises.
+Cross domain local storage, with permissions. Features an API using ES6 promises.
 
 ## Overview
 
@@ -18,13 +18,17 @@ and post messages, requesting data to be stored, retrieved, and deleted. This
 allows multiple clients to access and share the data located in a single store.
 
 Care should be made to limit the origins of the bidirectional communication.
-As such, when initializing the hub, a RegExp is passed. Any messages from
-clients whose origin does not match the pattern are ignored.
+As such, when initializing the hub, an array of permissions objects is passed.
+Any messages from clients whose origin does not match the pattern are ignored,
+as well as those not within the allowed set of methods. The set of permissions
+are enforced thanks to the same-origin policy. However, keep in mind that any
+user has full control of their local storage data - it's still client data.
+This only restricts access on a per-domain or web app level.
 
 **Hub**
 
 ``` javascript
-// Config s.t. subdomain can get, but only root domain can set and del
+// Config s.t. subdomains can get, but only the root domain can set and del
 CrossStorageHub.init([
   {origin: /\.example.com$/,        allow: ['get']},
   {origin: /:(www\.)?example.com$/, allow: ['get', 'set', 'del']}
@@ -38,7 +42,7 @@ invalid.example.com.malicious.com.
 **Client**
 
 ``` javascript
-var storage = new CrossStorageClient('https://example.com/hub.html');
+var storage = new CrossStorageClient('https://storage.example.com/hub.html');
 
 storage.onConnect().then(function() {
   // Set a key with a TTL of 90 seconds
@@ -62,7 +66,7 @@ bower install cross-storage
 
 ## API
 
-#### CrossStorageHub.init
+#### CrossStorageHub.init(permissions)
 
 Accepts an array of objects with two keys: origin and allow. The value
 of origin is expected to be a RegExp, and allow, an array of strings.
@@ -76,7 +80,7 @@ CrossStorageHub.init([
 ]);
 ```
 
-#### Class: CrossStorageClient
+#### new CrossStorageClient(url, [timeout])
 
 Constructs a new cross storage client given the url to a hub. An iframe
 is created within the document body that points to the specified url. Also
@@ -99,7 +103,7 @@ storage.onConnect().then(function() {
 });
 ```
 
-#### CrossStorageClient.prototype.set
+#### CrossStorageClient.prototype.set(key, value, [ttl])
 
 Sets a key to the specified value, optionally accepting a ttl to passively
 expire the key after a number of milliseconds. Returns a promise that is
@@ -114,7 +118,7 @@ storage.onConnect().then(function() {
 });
 ```
 
-#### CrossStorageClient.prototype.get
+#### CrossStorageClient.prototype.get(key1, [key2], [...])
 
 Accepts one or more keys for which to retrieve their values. Returns a
 promise that is settled on hub response or timeout. On success, it is
@@ -132,7 +136,7 @@ storage.onConnect().then(function() {
 });
 ```
 
-#### CrossStorageClient.prototype.del
+#### CrossStorageClient.prototype.del(key1, [key2], [...])
 
 Accepts one or more keys for deletion. Returns a promise that is settled on
 hub response or timeout.
@@ -154,7 +158,18 @@ For compatibility with older browsers, simply load a Promise polyfill such as
 
 You can also use RSVP or any other ES6 compliant promise library. Supports IE8
 and up using the above polyfill. A JSON polyfill is also required
-for IE8 in Compatibility View.
+for IE8 in Compatibility View. Also note that `catch` is a reserved word in IE8,
+and so error handling with promises can be done as:
+
+``` javascript
+storage.onConnect().then(function() {
+  return storage.get('key1');
+}).then(function(res) {
+  // ... on success
+})['catch'](function(err) {
+  // ... on error
+});
+```
 
 ## Building
 
