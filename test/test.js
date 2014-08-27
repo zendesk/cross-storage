@@ -2,11 +2,39 @@ var expect = require('expect.js');
 // Note: IE8 requires that catch be referenced as ['catch'] on a promise
 
 describe('CrossStorageClient', function() {
-  this.timeout(30000);
+  var origin, url, storage;
 
-  var origin = CrossStorageClient._getOrigin(window.location.href);
-  var url = origin + '/test/hub.html';
-  var storage = new CrossStorageClient(url, 10000);
+  this.timeout((window.location.hostname === 'localhost') ? 5000 : 60000);
+  origin = CrossStorageClient._getOrigin(window.location.href);
+  url = origin + '/test/hub.html';
+
+  // Create initial client
+  before(function(done) {
+    var invoked = false;
+    var next = function(msg) {
+      if (msg.data !== 'ready' || invoked) return;
+      invoked = true;
+      done();
+    };
+
+    if (window.addEventListener) {
+      window.addEventListener('message', next, false);
+    } else {
+      window.attachEvent('onmessage', next);
+    }
+
+    storage = new CrossStorageClient(url, 10000);
+  });
+
+  // Cleanup old iframes
+  afterEach(function() {
+    var iframes = document.getElementsByTagName('iframe');
+    for (var i = 0; i < iframes.length; i++) {
+      if (iframes[i].src !== url) {
+        iframes[i].parentNode.removeChild(iframes[i]);
+      }
+    }
+  });
 
   var setGet = function(key, value, ttl) {
     return function() {
@@ -86,9 +114,8 @@ describe('CrossStorageClient', function() {
   });
 
   it('fails to make any requests not within its permissions', function(done) {
-    this.timeout(30000);
     var url = origin + '/test/getOnlyHub.html';
-    var storage = new CrossStorageClient(url, 15000);
+    var storage = new CrossStorageClient(url, 50000);
 
     storage.onConnect().then(function() {
       return storage.set('key1', 'new');
@@ -99,9 +126,8 @@ describe('CrossStorageClient', function() {
   });
 
   it('fails to make any requests if not of an allowed origin', function(done) {
-    this.timeout(20000);
     var url = origin + '/test/invalidOriginHub.html';
-    var storage = new CrossStorageClient(url, 15000);
+    var storage = new CrossStorageClient(url, 50000);
 
     storage.onConnect().then(function() {
       return storage.set('key1', 'new');
