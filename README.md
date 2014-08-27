@@ -27,7 +27,7 @@ clients whose origin does not match the pattern are ignored.
 // Config s.t. subdomain can get, but only root domain can set and del
 CrossStorageHub.init([
   {origin: /\.example.com$/,        allow: ['get']},
-  {origin: /:(www\.)?example.com$/, allow: ['set', 'del']}
+  {origin: /:(www\.)?example.com$/, allow: ['get', 'set', 'del']}
 ]);
 ```
 
