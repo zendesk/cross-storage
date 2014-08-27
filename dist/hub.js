@@ -87,7 +87,7 @@ CrossStorageHub._permitted = function(origin, method) {
 
   available = ['get', 'set', 'del'];
   if (!CrossStorageHub._inArray(method, available)) {
-    return;
+    return false;
   }
 
   for (i = 0; i < CrossStorageHub._permissions.length; i++) {

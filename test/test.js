@@ -2,7 +2,7 @@ var expect = require('expect.js');
 // Note: IE8 requires that catch be referenced as ['catch'] on a promise
 
 describe('CrossStorageClient', function() {
-  this.timeout(10000);
+  this.timeout(20000);
 
   var origin = CrossStorageClient._getOrigin(window.location.href);
   var url = origin + '/test/hub.html';
@@ -91,6 +91,9 @@ describe('CrossStorageClient', function() {
     });
 
     it('fail if not given the necessary permissions', function(done) {
+      // Avoid timing out from rendering a new HTML page
+      this.timeout(40000);
+
       var url = origin + '/test/getOnlyHub.html';
       var storage = new CrossStorageClient(url);
 
