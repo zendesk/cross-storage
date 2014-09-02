@@ -1,4 +1,4 @@
-# cross-storage
+![cross-storage](https://github.com/zendesk/cross-storage/raw/master/media/logo.png)
 
 Cross domain local storage, with permissions. Features an API using ES6 promises.
 
