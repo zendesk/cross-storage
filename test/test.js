@@ -85,6 +85,11 @@ describe('CrossStorageClient', function() {
       expect(frame.src).to.be(url);
     });
 
+    it('sets the frame id to _frameId', function() {
+      var frame = document.getElementById(storage._frameId);
+      expect(frame).not.to.be(null);
+    });
+
     it('stores the frame context window in _hub', function() {
       // constructor.name isn't cross browser, and the window function name
       // varies between browsers (WindowConstructor, Window, etc)
@@ -114,6 +119,27 @@ describe('CrossStorageClient', function() {
 
         done(new Error('onConnect fired without connecting'));
       }, 100);
+    });
+  });
+
+  describe('close', function() {
+    var storage;
+
+    before(function(done) {
+      storage = new CrossStorageClient(url);
+      storage.onConnect().then(function() {
+        storage.close();
+        done();
+      });
+    });
+
+    it('sets _connected to false', function() {
+      expect(storage._connected).to.be(false);
+    });
+
+    it('deletes the iframe', function() {
+      var frame = document.getElementById(storage._frameId);
+      expect(frame).to.be(null);
     });
   });
 

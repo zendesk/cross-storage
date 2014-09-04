@@ -154,6 +154,21 @@ storage.onConnect().then(function() {
 });
 ```
 
+#### CrossStorageClient.prototype.close()
+
+Deletes the iframe and sets the connected state to false. The client can
+no longer be used after being invoked.
+
+``` javascript
+storage.onConnect().then(function() {
+  return storage.set('key1', 'key2');
+}).catch(function(err) {
+  // Handle error
+}).then(function() {
+  storage.close();
+});
+```
+
 ## Compatibility
 
 For compatibility with older browsers, simply load a Promise polyfill such as
