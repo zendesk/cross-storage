@@ -8,9 +8,10 @@ Cross domain local storage, with permissions. Features an API using ES6 promises
 
 The library is a convenient alternative to sharing a root domain cookie.
 Unlike cookies, your client-side data isn't limited to a few kilobytes - you
-get a guaranteed 2.49Mb. This is all thanks to LocalStorage, which is available
-in IE 8+, FF 3.5+, Chrome 4+, as well as a majority of mobile browsers. For a
-list of compatible browsers, refer to
+get a guaranteed 2.49Mb. For a client-heavy application, you can potentially
+shave a few KB off your request headers by avoiding cookies. This is all thanks
+to LocalStorage, which is available in IE 8+, FF 3.5+, Chrome 4+, as well as a
+majority of mobile browsers. For a list of compatible browsers, refer to
 [caniuse](http://caniuse.com/#feat=namevalue-storage).
 
 How does it work? The library is divided into two types of components: hubs
@@ -60,11 +61,29 @@ storage.onConnect().then(function() {
 
 ## Installation
 
-Once made public, the module will be available via bower:
+The application can be installed via bower:
 
 ``` bash
 bower install cross-storage
 ```
+
+When serving the hub, you'll want to set the CORS and CSP headers for your
+server appropriately. For example:
+
+``` javascript
+{
+  'Access-Control-Allow-Origin':  '*',
+  'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+  'Access-Control-Allow-Headers': 'X-Requested-With',
+  'Content-Security-Policy':      "default-src 'unsafe-inline' *",
+  'X-Content-Security-Policy':    "default-src 'unsafe-inline' *",
+  'X-WebKit-CSP':                 "default-src 'unsafe-inline' *",
+}
+```
+
+If using inline JS to create the hub, you'll need to specify `unsafe-inline`
+for the CSP headers. Otherwise, it can be left out if simply included the
+init code via another resource.
 
 ## API
 
