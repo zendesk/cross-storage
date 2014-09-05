@@ -1,9 +1,0 @@
-ui: mocha-bdd
-server: "./test/server.js"
-scripts:
-  - "https://s3.amazonaws.com/es6-promises/promise-1.0.0.min.js"
-  - "lib/client.js"
-browsers:
-  - name: firefox
-    version: 29..latest
-    platform: Linux
