@@ -2,6 +2,8 @@
 
 Cross domain local storage, with permissions. Features an API using ES6 promises.
 
+[![Build Status](https://travis-ci.org/zendesk/cross-storage.svg?branch=master)](https://travis-ci.org/zendesk/cross-storage)
+
 ## Overview
 
 The library is a convenient alternative to sharing a root domain cookie.
