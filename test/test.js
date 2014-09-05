@@ -296,8 +296,9 @@ describe('CrossStorageClient', function() {
         return storage.getKeys();
       })
       .then(function(res) {
-        console.log(res);
-        expect(res).to.eql(keys);
+        // key order varies in some browsers
+        expect(res).to.have.length(2);
+        expect(res).to.contain(keys[0], keys[1]);
         done();
       })['catch'](done);
     });
