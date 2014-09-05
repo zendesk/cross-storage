@@ -1,6 +1,6 @@
 {
   "name": "cross-storage",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Cross domain local storage",
   "license": "Apache-2.0",
   "main": [
@@ -22,6 +22,8 @@
   ],
   "ignore": [
     ".*",
+    "media",
+    "gulpfile.js",
     "package.json",
     "README.md",
     "index.js",

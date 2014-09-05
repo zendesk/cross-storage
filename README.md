@@ -4,6 +4,21 @@ Cross domain local storage, with permissions. Features an API using ES6 promises
 
 [![Build Status](https://travis-ci.org/zendesk/cross-storage.svg?branch=master)](https://travis-ci.org/zendesk/cross-storage)
 
+* [Overview](#overview)
+* [Installation](#installation)
+* [API](#api)
+  * [CrossStorageHub.init(permissions)](#crossstoragehubinitpermissions)
+  * [new CrossStorageClient(url, \[opts\])](#new-crossstorageclienturl-opts)
+  * [CrossStorageClient.prototype.onConnect()](#crossstorageclientprototypeonconnect)
+  * [CrossStorageClient.prototype.set(key, value, \[ttl\])](#crossstorageclientprototypesetkey-value-ttl)
+  * [CrossStorageClient.prototype.get(key1, \[key2\], \[...\])](#crossstorageclientprototypegetkey1-key2-)
+  * [CrossStorageClient.prototype.del(key1, \[key2\], \[...\])](#crossstorageclientprototypedelkey1-key2-)
+  * [CrossStorageClient.prototype.close()](#crossstorageclientprototypeclose)
+* [Compatibility](#compatibility)
+* [Building](#building)
+* [Tests](#tests)
+* [Copyright and license](#copyright-and-license)
+
 ## Overview
 
 The library is a convenient alternative to sharing a root domain cookie.
@@ -61,7 +76,7 @@ storage.onConnect().then(function() {
 
 ## Installation
 
-The application can be installed via bower:
+The library can be installed via bower:
 
 ``` bash
 bower install cross-storage
@@ -82,7 +97,7 @@ server appropriately. For example:
 ```
 
 If using inline JS to create the hub, you'll need to specify `unsafe-inline`
-for the CSP headers. Otherwise, it can be left out if simply included the
+for the CSP headers. Otherwise, it can be left out if simply including the
 init code via another resource.
 
 ## API
@@ -119,7 +134,7 @@ var storage = new CrossStorageClient('http://localhost:3000/hub.html', {
 });
 ```
 
-#### CrossStorageClient.prototype.onConnect
+#### CrossStorageClient.prototype.onConnect()
 
 Returns a promise that is fulfilled when a connection has been established
 with the cross storage hub. Its use is recommended to avoid sending any
@@ -222,8 +237,8 @@ The minified, production JavaScript can be generated with gulp by running
 
 ## Tests
 
-Tests can be ran locally using `npm test` Tests are built using Zuul for
-eventual easy integration with SauceLabs for multi-browser testing.
+Tests can be ran locally using `npm test`. Tests are ran using Zuul, and
+the Travis CI build uses Sauce Labs for multi-browser testing as well.
 
 ## Copyright and license
 
