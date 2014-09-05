@@ -1,6 +1,6 @@
 {
   "name": "cross-storage",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Cross domain local storage",
   "license": "Apache-2.0",
   "main": [
