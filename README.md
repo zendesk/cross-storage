@@ -84,6 +84,12 @@ The library can be installed via bower:
 bower install cross-storage
 ```
 
+Or using npm:
+
+``` bash
+npm install cross-storage
+```
+
 When serving the hub, you may want to set the CORS and CSP headers for your
 server depending on client/hub location. For example:
 
