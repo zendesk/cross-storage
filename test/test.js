@@ -284,5 +284,22 @@ describe('CrossStorageClient', function() {
         done();
       })['catch'](done);
     });
+
+    it('can retrieve all keys using getKeys', function(done) {
+      var keys = ['key1', 'key2'];
+      var values = ['foo', 'bar'];
+
+      storage.onConnect()
+      .then(setGet(keys[0], values[0]))
+      .then(setGet(keys[1], values[1]))
+      .then(function() {
+        return storage.getKeys();
+      })
+      .then(function(res) {
+        console.log(res);
+        expect(res).to.eql(keys);
+        done();
+      })['catch'](done);
+    });
   });
 });
