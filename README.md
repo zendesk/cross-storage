@@ -82,8 +82,8 @@ The library can be installed via bower:
 bower install cross-storage
 ```
 
-When serving the hub, you'll want to set the CORS and CSP headers for your
-server appropriately. For example:
+When serving the hub, you may want to set the CORS and CSP headers for your
+server depending on client/hub location. For example:
 
 ``` javascript
 {
