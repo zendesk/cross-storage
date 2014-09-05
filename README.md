@@ -1,8 +1,8 @@
 ![cross-storage](https://github.com/zendesk/cross-storage/raw/master/media/logo.png)
 
-Cross domain local storage, with permissions. Enables multiple clients, across
-a variety of domains, to share a single localStorage. Features an API using
-ES6 promises.
+Cross domain local storage, with permissions. Enables multiple browser
+windows/tabs, across a variety of domains, to share a single localStorage.
+Features an API using ES6 promises.
 
 [![Build Status](https://travis-ci.org/zendesk/cross-storage.svg?branch=master)](https://travis-ci.org/zendesk/cross-storage)
 
