@@ -2,6 +2,15 @@ var expect = require('expect.js');
 // Note: IE8 requires that catch be referenced as ['catch'] on a promise
 
 describe('CrossStorageClient', function() {
+  // Mocha detects the frame id as being leaked in IE
+  var userAgent = window.navigator.userAgent;
+  var ieDetected = (userAgent.indexOf('MSIE ') !== false ||
+    !!navigator.userAgent.match(/Trident.*rv\:11\./));
+
+  if (global.mocha && ieDetected) {
+    global.mocha.globals(['CrossStorageClient-*']);
+  }
+
   var origin, url, storage;
 
   this.timeout((window.location.hostname === 'localhost') ? 5000 : 60000);
