@@ -18,6 +18,7 @@ Features an API using ES6 promises.
   * [CrossStorageClient.prototype.getKeys()](#crossstorageclientprototypegetkeys)
   * [CrossStorageClient.prototype.close()](#crossstorageclientprototypeclose)
 * [Compatibility](#compatibility)
+* [Compression](#compression)
 * [Building](#building)
 * [Tests](#tests)
 * [Copyright and license](#copyright-and-license)
@@ -26,7 +27,7 @@ Features an API using ES6 promises.
 
 The library is a convenient alternative to sharing a root domain cookie.
 Unlike cookies, your client-side data isn't limited to a few kilobytes - you
-get a guaranteed 2.49Mb. For a client-heavy application, you can potentially
+get up to 2.49M chars. For a client-heavy application, you can potentially
 shave a few KB off your request headers by avoiding cookies. This is all thanks
 to LocalStorage, which is available in IE 8+, FF 3.5+, Chrome 4+, as well as a
 majority of mobile browsers. For a list of compatible browsers, refer to
@@ -251,6 +252,20 @@ storage.onConnect().then(function() {
   // ... on error
 });
 ```
+
+## Compression
+
+Most localStorage-compatible browsers offer at least ~5Mb of storage. But keys
+and values are defined as DOMStrings, which are UTF-8 encoded using single
+16-bit sequences. That means a string of ~2.5 million ASCII characters will use
+up ~5Mb, since they're 2 bytes per char.
+
+If you need to maximize your storage space, consider using
+[lz-string](https://github.com/pieroxy/lz-string/). For smaller strings, it's
+not uncommon to see a 50% reduction in size when compressed, which will bring
+you a lot closer to 5 million characters. At that point, you're only limited by
+the kind of strings being stored, as well as the serialization format used by
+the library.
 
 ## Building
 
