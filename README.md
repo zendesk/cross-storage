@@ -264,8 +264,8 @@ If you need to maximize your storage space, consider using
 [lz-string](https://github.com/pieroxy/lz-string/). For smaller strings, it's
 not uncommon to see a 50% reduction in size when compressed, which will bring
 you a lot closer to 5 million characters. At that point, you're only limited by
-the kind of strings being stored, as well as the serialization format used by
-the library.
+the average compression rate of your strings, as well as the minor overhead
+produced by the serialization format used by the library: JSON.
 
 ## Building
 
