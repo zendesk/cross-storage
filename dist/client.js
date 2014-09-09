@@ -317,7 +317,7 @@ CrossStorageClient.prototype._request = function(method, params) {
   var req, client;
 
   if (this._closed) {
-    throw new Error('CrossStorageClient has closed');
+    return Promise.reject(new Error('CrossStorageClient has closed'));
   }
 
   client = this;
