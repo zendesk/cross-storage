@@ -176,6 +176,19 @@ describe('CrossStorageClient', function() {
     });
   });
 
+  it('fails to make any requests if the client has closed', function(done) {
+    var storage = new CrossStorageClient(url, {timeout: 50000});
+
+    storage.onConnect().then(function() {
+      storage.close();
+
+      return storage.set('key1', 'new');
+    })['catch'](function(err) {
+      expect(err.message).to.be('CrossStorageClient has closed');
+      done();
+    });
+  });
+
   describe('given sufficient permissions', function() {
     beforeEach(function(done) {
       cleanup(done);
