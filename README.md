@@ -253,6 +253,15 @@ storage.onConnect().then(function() {
 });
 ```
 
+**Notes for Safari 7 (OSX, iOS)**
+
+All cross-domain local storage access is disabled by default with Safari 7.
+This is a result of the "Block cookies and other website data" privacy setting
+being set to "From third parties and advertisers". Any cross-storage client
+code will not crash, however, it will only have access to a sandboxed, isolated
+local storage instance. As such, none of the data previously set by other
+origins will be accessible.
+
 ## Compression
 
 Most localStorage-compatible browsers offer at least ~5Mb of storage. But keys
