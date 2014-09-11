@@ -13,7 +13,7 @@ describe('CrossStorageClient', function() {
 
   var origin, url, storage;
 
-  this.timeout((window.location.hostname === 'localhost') ? 5000 : 60000);
+  this.timeout(15000);
   origin = CrossStorageClient._getOrigin(window.location.href);
   url = origin + '/test/hub.html';
 

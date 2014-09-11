@@ -91,9 +91,7 @@ CrossStorageClient._getOrigin = function(url) {
   uri.href = url;
 
   origin = uri.protocol + '//' + uri.host;
-  if (!window.location.port) {
-    origin = origin.replace(/:80|:443/, '');
-  }
+  origin = origin.replace(/:80$|:443$/, '');
 
   return origin;
 };
