@@ -136,7 +136,7 @@ promise. The timeout, in milliseconds, is applied to each request and
 defaults to 3000ms. The options object may also include a frameId,
 identifying an existing frame on which to install its listeners. If the
 promise key is supplied the constructor for a Promise, that Promise library
-will be used instead of the default Window.Promise.
+will be used instead of the default window.Promise.
 
 ``` javascript
 var storage = new CrossStorageClient('http://localhost:3000/hub.html');
