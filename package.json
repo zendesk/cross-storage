@@ -1,6 +1,6 @@
 {
   "name": "cross-storage",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Cross domain local storage",
   "keywords": [
     "local",
