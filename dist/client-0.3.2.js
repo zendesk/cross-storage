@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.3.1
+ * @version   0.3.2
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -359,13 +359,19 @@ CrossStorageClient.prototype._request = function(method, params) {
 
     // In case we have a broken Array.prototype.toJSON, e.g. because of
     // old versions of prototype
-    var originalToJSON = Array.prototype.toJSON;
-    Array.prototype.toJSON = null;
+    var originalToJSON;
+
+    if (Array.prototype.toJSON) {
+      originalToJSON = Array.prototype.toJSON;
+      Array.prototype.toJSON = null;
+    }
 
     // Send serialized message
     client._hub.postMessage(JSON.stringify(req), client._origin);
 
     // Restore original toJSON
-    Array.prototype.toJSON = originalToJSON;
+    if (originalToJSON) {
+      Array.prototype.toJSON = originalToJSON;
+    }
   });
 };
