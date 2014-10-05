@@ -52,8 +52,8 @@ This only restricts access on a per-domain or web app level.
 ``` javascript
 // Config s.t. subdomains can get, but only the root domain can set and del
 CrossStorageHub.init([
-  {origin: /\.example.com$/,        allow: ['get']},
-  {origin: /:(www\.)?example.com$/, allow: ['get', 'set', 'del']}
+  {origin: /\.example.com$/,            allow: ['get']},
+  {origin: /:\/\/(www\.)?example.com$/, allow: ['get', 'set', 'del']}
 ]);
 ```
 
