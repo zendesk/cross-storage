@@ -150,7 +150,7 @@ var storage = new CrossStorageClient('http://localhost:3000/hub.html', {
 #### CrossStorageClient.prototype.onConnect()
 
 Returns a promise that is fulfilled when a connection has been established
-with the cross storage hub. Its use is recommended to avoid sending any
+with the cross storage hub. Its use is required to avoid sending any
 requests prior to initialization being complete.
 
 ``` javascript

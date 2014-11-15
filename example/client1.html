@@ -10,7 +10,7 @@
 
     var setKeys = function () {
       return storage.set('key1', 'foo').then(function() {
-        return storage.set('key2', 'bar')
+        return storage.set('key2', 'bar');
       });
     };
 
@@ -20,6 +20,9 @@
       return storage.get('key1');
     }).then(function(res) {
       console.log(res); // 'foo'
+    })['catch'](function(err) {
+      console.log(err);
     });
   </script>
+</body>
 </html>
