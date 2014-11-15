@@ -115,19 +115,34 @@ describe('CrossStorageClient', function() {
       storage.onConnect().then(done);
     });
 
-    it('is not fulfilled if a connection is not established', function(done) {
+    it('rejects if no connection could be established', function(done) {
       var storage = new CrossStorageClient('http://localhost:9999');
-      var invoked = false;
+
+      storage.onConnect()['catch'](function(err) {
+        expect(err.message).to.be('CrossStorageClient could not connect');
+        done();
+      });
+    });
+
+    it('can be used multiple times prior to connection', function(done) {
+      var storage, count, incrOnConnect, i;
+
+      storage = new CrossStorageClient(url);
+      count = 0;
+      incrOnConnect = function() {
+        storage.onConnect().then(function() {
+          count++;
+        });
+      };
+
+      for (i = 0; i < 5; i++) {
+        incrOnConnect();
+      }
 
       storage.onConnect().then(function() {
-        invoked = true;
+        expect(count).to.be(5);
+        done();
       });
-
-      setTimeout(function() {
-        if (!invoked) return done();
-
-        done(new Error('onConnect fired without connecting'));
-      }, 100);
     });
   });
 
