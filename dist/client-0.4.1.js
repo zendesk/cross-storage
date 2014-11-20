@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.4.0
+ * @version   0.4.1
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -252,7 +252,7 @@ CrossStorageClient.prototype._installListener = function() {
   var client = this;
 
   this._listener = function(message) {
-    var i, error;
+    var i, error, response;
 
     if (client._closed) return;
 
@@ -286,7 +286,12 @@ CrossStorageClient.prototype._installListener = function() {
     if (message.data === 'ready') return;
 
     // All other messages
-    var response = JSON.parse(message.data);
+    try {
+      response = JSON.parse(message.data);
+    } catch(e) {
+      return;
+    }
+
     if (!response.id) return;
 
     if (client._requests[response.id]) {
@@ -330,11 +335,13 @@ CrossStorageClient.prototype._poll = function() {
  * returns {HTMLIFrameElement} The iFrame element itself
  */
 CrossStorageClient.prototype._createFrame = function(url) {
-  var frame = window.document.createElement('iframe');
+  var frame, key;
+
+  frame = window.document.createElement('iframe');
   frame.id = this._frameId;
 
   // Style the iframe
-  for (var key in CrossStorageClient.frameStyle) {
+  for (key in CrossStorageClient.frameStyle) {
     if (CrossStorageClient.frameStyle.hasOwnProperty(key)) {
       frame.style[key] = CrossStorageClient.frameStyle[key];
     }
@@ -374,8 +381,10 @@ CrossStorageClient.prototype._request = function(method, params) {
   };
 
   return new this._promise(function(resolve, reject) {
+    var timeout, originalToJSON;
+
     // Timeout if a response isn't received after 4s
-    var timeout = setTimeout(function() {
+    timeout = setTimeout(function() {
       if (!client._requests[req.id]) return;
 
       delete client._requests[req.id];
@@ -391,8 +400,6 @@ CrossStorageClient.prototype._request = function(method, params) {
 
     // In case we have a broken Array.prototype.toJSON, e.g. because of
     // old versions of prototype
-    var originalToJSON;
-
     if (Array.prototype.toJSON) {
       originalToJSON = Array.prototype.toJSON;
       Array.prototype.toJSON = null;
