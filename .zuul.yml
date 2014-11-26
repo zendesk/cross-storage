@@ -5,10 +5,16 @@ scripts:
   - "lib/client.js"
 browsers:
   - name: chrome
-    version: 34..latest
+    version: 34
+    platform: Linux
+  - name: chrome
+    version: latest
     platform: Linux
   - name: firefox
-    version: 29..latest
+    version: 29
+    platform: Linux
+  - name: firefox
+    version: latest
     platform: Linux
   - name: safari
     version: 5..7
