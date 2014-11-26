@@ -25,7 +25,7 @@
     "gulp-header": "^1.1.1",
     "gulp-rimraf": "^0.1.0",
     "serve-static": "^1.5.3",
-    "zuul": "1.10.2"
+    "zuul": "^1.14.0"
   },
   "scripts": {
     "test": "./node_modules/.bin/zuul --local 8080 --ui mocha-bdd -- test/test.js",
