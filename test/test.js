@@ -313,6 +313,25 @@ describe('CrossStorageClient', function() {
       })['catch'](done);
     });
 
+    it('can clear all entries', function (done) {
+      var keys = ['key1', 'key2'];
+      var values = ['foo', 'bar'];
+
+      storage.onConnect()
+        .then(setGet(keys[0], values[0]))
+        .then(setGet(keys[1], values[1]))
+        .then(function() {
+          return storage.clear();
+        }).then(function() {
+          return storage.get(keys[0], keys[1]);
+        })
+        .then(function(res) {
+          expect(res).to.eql([null, null]);
+          done();
+        })['catch'](done);
+
+    });
+
     it('can retrieve all keys using getKeys', function(done) {
       var keys = ['key1', 'key2'];
       var values = ['foo', 'bar'];

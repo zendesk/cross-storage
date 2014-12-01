@@ -113,7 +113,7 @@ CrossStorageHub._listener = function(message) {
 CrossStorageHub._permitted = function(origin, method) {
   var available, i, entry, match;
 
-  available = ['get', 'set', 'del', 'getKeys'];
+  available = ['get', 'set', 'del', 'clear', 'getKeys'];
   if (!CrossStorageHub._inArray(method, available)) {
     return false;
   }
@@ -196,6 +196,13 @@ CrossStorageHub._del = function(params) {
   for (var i = 0; i < params.keys.length; i++) {
     window.localStorage.removeItem(params.keys[i]);
   }
+};
+
+/**
+ * Clears the local storage
+ */
+CrossStorageHub._clear = function () {
+  window.localStorage.clear();
 };
 
 /**

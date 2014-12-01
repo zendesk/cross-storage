@@ -207,6 +207,10 @@ CrossStorageClient.prototype.del = function() {
   return this._request('del', {keys: args});
 };
 
+CrossStorageClient.prototype.clear = function (params) {
+  return this._request('clear', params);
+};
+
 /**
  * Returns a promise that, when resolved, passes an array of all keys
  * currently in storage.
