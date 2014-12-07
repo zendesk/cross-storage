@@ -329,7 +329,6 @@ describe('CrossStorageClient', function() {
           expect(res).to.eql([null, null]);
           done();
         })['catch'](done);
-
     });
 
     it('can retrieve all keys using getKeys', function(done) {
