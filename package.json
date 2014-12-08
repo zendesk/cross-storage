@@ -25,10 +25,10 @@
     "gulp-header": "^1.1.1",
     "gulp-rimraf": "^0.1.0",
     "serve-static": "^1.5.3",
-    "zuul": "^1.14.0"
+    "zuul": "git://github.com/defunctzombie/zuul.git#8c4e156fcd"
   },
   "scripts": {
-    "test": "./node_modules/.bin/zuul --local 8080 --ui mocha-bdd -- test/test.js",
-    "saucetest": "./node_modules/.bin/zuul --ui mocha-bdd -- test/test.js"
+    "test": "./node_modules/.bin/zuul --local 8080 test/test.js",
+    "saucetest": "./node_modules/.bin/zuul test/test.js"
   }
 }
