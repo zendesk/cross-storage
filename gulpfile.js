@@ -31,9 +31,6 @@ gulp.task('clean', function() {
 gulp.task('copy', function() {
   gulp.src(paths.scripts)
     .pipe(header(banner, {pkg: pkg}))
-    .pipe(rename(function(path) {
-      path.basename += '-' + pkg.version;
-    }))
     .pipe(gulp.dest(paths.dist));
 });
 
@@ -42,7 +39,7 @@ gulp.task('minify', function() {
     .pipe(uglify())
     .pipe(header(banner, {pkg: pkg}))
     .pipe(rename(function(path) {
-      path.basename += '-' + pkg.version + '.min';
+      path.basename += '.min';
     }))
     .pipe(gulp.dest(paths.dist));
 });
