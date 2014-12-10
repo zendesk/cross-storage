@@ -16,6 +16,7 @@ Features an API using ES6 promises.
   * [CrossStorageClient.prototype.get(key1, \[key2\], \[...\])](#crossstorageclientprototypegetkey1-key2-)
   * [CrossStorageClient.prototype.del(key1, \[key2\], \[...\])](#crossstorageclientprototypedelkey1-key2-)
   * [CrossStorageClient.prototype.getKeys()](#crossstorageclientprototypegetkeys)
+  * [CrossStorageClient.prototype.clear()](#crossstorageclientprototypeclear)
   * [CrossStorageClient.prototype.close()](#crossstorageclientprototypeclose)
 * [Compatibility](#compatibility)
 * [Compression](#compression)
@@ -118,12 +119,12 @@ Accepts an array of objects with two keys: origin and allow. The value
 of origin is expected to be a RegExp, and allow, an array of strings.
 The cross storage hub is then initialized to accept requests from any of
 the matching origins, allowing access to the associated lists of methods.
-Methods may include any of: get, set, del, and getKeys. A 'ready' message
-is sent to the parent window once complete.
+Methods may include any of: get, set, del, getKeys and clear. A 'ready'
+message is sent to the parent window once complete.
 
 ``` javascript
 CrossStorageHub.init([
-  {origin: /localhost:3000$/, allow: ['get', 'set', 'del', 'getKeys']}
+  {origin: /localhost:3000$/, allow: ['get', 'set', 'del', 'getKeys', 'clear']}
 ]);
 ```
 
@@ -213,6 +214,17 @@ storage.onConnect().then(function() {
   return storage.getKeys();
 }).then(function(keys) {
   // ['key1', 'key2', ...]
+});
+```
+
+#### CrossStorageClient.prototype.clear()
+
+Returns a promise that, when resolved, indicates that all localStorage
+data has been cleared.
+
+``` javascript
+storage.onConnect().then(function() {
+  return storage.clear();
 });
 ```
 
