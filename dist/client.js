@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.4.1
+ * @version   0.5.0
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -207,8 +207,14 @@ CrossStorageClient.prototype.del = function() {
   return this._request('del', {keys: args});
 };
 
-CrossStorageClient.prototype.clear = function (params) {
-  return this._request('clear', params);
+/**
+ * Returns a promise that, when resolved, indicates that all localStorage
+ * data has been cleared.
+ *
+ * @returns {Promise} A promise that is settled on hub response or timeout
+ */
+CrossStorageClient.prototype.clear = function() {
+  return this._request('clear');
 };
 
 /**

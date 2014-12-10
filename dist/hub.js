@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.4.1
+ * @version   0.5.0
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -15,8 +15,8 @@ var CrossStorageHub = {};
  * of origin is expected to be a RegExp, and allow, an array of strings.
  * The cross storage hub is then initialized to accept requests from any of
  * the matching origins, allowing access to the associated lists of methods.
- * Methods may include any of: get, set, del, and getKeys. A 'ready' message
- * is sent to the parent window once complete.
+ * Methods may include any of: get, set, del, getKeys and clear. A 'ready'
+ * message is sent to the parent window once complete.
  *
  * @example
  * // Subdomain can get, but only root domain can set and del
@@ -39,7 +39,11 @@ CrossStorageHub.init = function(permissions) {
   }
 
   if (!available) {
-    return window.parent.postMessage('unavailable', '*');
+    try {
+      return window.parent.postMessage('unavailable', '*');
+    } catch (e) {
+      return;
+    }
   }
 
   CrossStorageHub._permissions = permissions || [];
@@ -199,9 +203,9 @@ CrossStorageHub._del = function(params) {
 };
 
 /**
- * Clears the local storage
+ * Clears localStorage.
  */
-CrossStorageHub._clear = function () {
+CrossStorageHub._clear = function() {
   window.localStorage.clear();
 };
 
