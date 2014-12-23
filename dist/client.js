@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.5.0
+ * @version   0.5.1
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -93,7 +93,8 @@ CrossStorageClient.frameStyle = {
  * Returns the origin of an url, with cross browser support. Accommodates
  * the lack of location.origin in IE, as well as the discrepancies in the
  * inclusion of the port when using the default port for a protocol, e.g.
- * 443 over https.
+ * 443 over https. Defaults to the origin of window.location if passed a
+ * relative path.
  *
  * @param   {string} url The url to a cross storage hub
  * @returns {string} The origin of the url
@@ -103,6 +104,10 @@ CrossStorageClient._getOrigin = function(url) {
 
   uri = document.createElement('a');
   uri.href = url;
+
+  if (!uri.host) {
+    uri = window.location;
+  }
 
   origin = uri.protocol + '//' + uri.host;
   origin = origin.replace(/:80$|:443$/, '');
