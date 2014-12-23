@@ -67,6 +67,15 @@ describe('CrossStorageClient', function() {
       expect(storage._origin).to.be(origin);
     });
 
+    it("uses window.location's origin if passed a relative path", function() {
+      var storage, origin;
+      storage = new CrossStorageClient('hub.html');
+      origin = window.location.protocol + '//' + window.location.host;
+      origin = origin.replace(/:80$|:443$/, '');
+
+      expect(storage._origin).to.be(origin);
+    });
+
     it('sets _timeout to opts.timeout, if provided', function() {
       expect(storage._timeout).to.be(10000);
     });
