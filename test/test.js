@@ -21,7 +21,7 @@ describe('CrossStorageClient', function() {
   before(function(done) {
     var invoked = false;
     var next = function(msg) {
-      if (msg.data !== 'ready' || invoked) return;
+      if (msg.data !== 'cross-storage:ready' || invoked) return;
       invoked = true;
       done();
     };
