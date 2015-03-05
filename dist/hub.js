@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.5.1
+ * @version   0.6.0
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -40,7 +40,7 @@ CrossStorageHub.init = function(permissions) {
 
   if (!available) {
     try {
-      return window.parent.postMessage('unavailable', '*');
+      return window.parent.postMessage('cross-storage:unavailable', '*');
     } catch (e) {
       return;
     }
@@ -48,7 +48,7 @@ CrossStorageHub.init = function(permissions) {
 
   CrossStorageHub._permissions = permissions || [];
   CrossStorageHub._installListener();
-  window.parent.postMessage('ready', '*');
+  window.parent.postMessage('cross-storage:ready', '*');
 };
 
 /**
@@ -75,22 +75,26 @@ CrossStorageHub._installListener = function() {
  * @param {MessageEvent} message A message to be processed
  */
 CrossStorageHub._listener = function(message) {
-  var uri, available, request, error, result, response;
+  var uri, available, request, method, error, result, response;
 
   // Handle polling for a ready message
-  if (message.data === 'poll') {
-    return window.parent.postMessage('ready', message.origin);
+  if (message.data === 'cross-storage:poll') {
+    return window.parent.postMessage('cross-storage:ready', message.origin);
   }
 
   // Ignore the ready message when viewing the hub directly
-  if (message.data === 'ready') return;
-  request = JSON.parse(message.data);
+  if (message.data === 'cross-storage:ready') return;
 
-  if (!CrossStorageHub._permitted(message.origin, request.method)) {
-    error = 'Invalid permissions for ' + request.method;
+  request = JSON.parse(message.data);
+  method = request.method.split('cross-storage:')[1];
+
+  if (!method) {
+    return;
+  } else if (!CrossStorageHub._permitted(message.origin, method)) {
+    error = 'Invalid permissions for ' + method;
   } else {
     try {
-      result = CrossStorageHub['_' + request.method](request.params);
+      result = CrossStorageHub['_' + method](request.params);
     } catch (err) {
       error = err.message;
     }

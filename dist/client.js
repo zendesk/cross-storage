@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.5.1
+ * @version   0.6.0
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -275,7 +275,7 @@ CrossStorageClient.prototype._installListener = function() {
     if (message.origin !== client._origin) return;
 
     // LocalStorage isn't available in the hub
-    if (message.data === 'unavailable') {
+    if (message.data === 'cross-storage:unavailable') {
       if (!client._closed) client.close();
       if (!client._requests.connect) return;
 
@@ -288,7 +288,7 @@ CrossStorageClient.prototype._installListener = function() {
     }
 
     // Handle initial connection
-    if (!client._connected) {
+    if (message.data.indexOf('cross-storage:') !== -1 && !client._connected) {
       client._connected = true;
       if (!client._requests.connect) return;
 
@@ -298,7 +298,7 @@ CrossStorageClient.prototype._installListener = function() {
       delete client._requests.connect;
     }
 
-    if (message.data === 'ready') return;
+    if (message.data === 'cross-storage:ready') return;
 
     // All other messages
     try {
@@ -335,7 +335,7 @@ CrossStorageClient.prototype._poll = function() {
     if (client._connected) return clearInterval(interval);
     if (!client._hub) return;
 
-    client._hub.postMessage('poll', client._origin);
+    client._hub.postMessage('cross-storage:poll', client._origin);
   }, 1000);
 };
 
@@ -391,7 +391,7 @@ CrossStorageClient.prototype._request = function(method, params) {
 
   req = {
     id:     this._id + ':' + client._count,
-    method: method,
+    method: 'cross-storage:' + method,
     params: params
   };
 
