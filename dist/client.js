@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.6.0
+ * @version   0.6.1
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -100,7 +100,7 @@ CrossStorageClient.frameStyle = {
  * @returns {string} The origin of the url
  */
 CrossStorageClient._getOrigin = function(url) {
-  var uri, origin;
+  var uri, protocol, origin;
 
   uri = document.createElement('a');
   uri.href = url;
@@ -109,7 +109,13 @@ CrossStorageClient._getOrigin = function(url) {
     uri = window.location;
   }
 
-  origin = uri.protocol + '//' + uri.host;
+  if (!uri.protocol || uri.protocol === ':') {
+    protocol = window.location.protocol;
+  } else {
+    protocol = uri.protocol;
+  }
+
+  origin = protocol + '//' + uri.host;
   origin = origin.replace(/:80$|:443$/, '');
 
   return origin;
