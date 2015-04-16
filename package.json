@@ -8,6 +8,7 @@
     "cross",
     "domain"
   ],
+  "main": "lib/index.js",
   "author": "Daniel St. Jules <danielst.jules@gmail.com>",
   "license": "Apache-2.0",
   "homepage": "https://github.com/zendesk/cross-storage",
