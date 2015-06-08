@@ -93,6 +93,13 @@ Or using npm:
 npm install cross-storage
 ```
 
+along with browserify:
+
+``` javascript
+var CrossStorageClient = require('cross-storage').CrossStorageClient;
+var CrossStorageHub    = require('cross-storage').CrossStorageHub;
+```
+
 When serving the hub, you may want to set the CORS and CSP headers for your
 server depending on client/hub location. For example:
 
