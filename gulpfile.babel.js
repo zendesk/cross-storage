@@ -1,12 +1,12 @@
-var gulp   = require('gulp');
-var rimraf = require('gulp-rimraf');
-var uglify = require('gulp-uglify');
-var jshint = require('gulp-jshint');
-var rename = require('gulp-rename');
-var header = require('gulp-header');
+import gulp from 'gulp';
+import rimraf from 'gulp-rimraf';
+import uglify from 'gulp-uglify';
+import jshint from 'gulp-jshint';
+import rename from 'gulp-rename';
+import header from 'gulp-header';
 
-var pkg    = require('./package.json');
-var banner = [
+const pkg    = require('./package.json');
+const banner = [
   '/**',
   ' * <%= pkg.name %> - <%= pkg.description %>',
   ' *',
@@ -18,23 +18,23 @@ var banner = [
   ' */\n\n'
 ].join('\n');
 
-var paths = {
+const paths = {
   scripts: './lib/*.js',
   dist: './dist/'
 };
 
-gulp.task('clean', function() {
+gulp.task('clean', () => {
   gulp.src(paths.dist + '*', {read: false})
     .pipe(rimraf());
 });
 
-gulp.task('copy', function() {
+gulp.task('copy', () => {
   gulp.src(paths.scripts)
     .pipe(header(banner, {pkg: pkg}))
     .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task('minify', function() {
+gulp.task('minify', () => {
   gulp.src(paths.scripts)
     .pipe(uglify())
     .pipe(header(banner, {pkg: pkg}))
@@ -44,7 +44,7 @@ gulp.task('minify', function() {
     .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task('jshint', function() {
+gulp.task('jshint', () => {
   gulp.src(paths.scripts)
     .pipe(jshint())
     .pipe(jshint.reporter());
