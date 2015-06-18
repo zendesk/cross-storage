@@ -19,14 +19,15 @@
   "devDependencies": {
     "connect": "^2.25.7",
     "expect.js": "^0.3.1",
-    "gulp": "*",
+    "gulp": "^3.9.0",
     "gulp-jshint": "^1.8.4",
     "gulp-rename": "^1.2.0",
     "gulp-uglify": "^0.3.1",
     "gulp-header": "^1.1.1",
     "gulp-rimraf": "^0.1.0",
     "serve-static": "^1.5.3",
-    "zuul": "~1.16.0"
+    "zuul": "~1.16.0",
+    "babel": "^5.5.8"
   },
   "scripts": {
     "test": "./node_modules/.bin/zuul --local 8080 --ui mocha-bdd -- test/test.js",
