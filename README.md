@@ -141,7 +141,7 @@ Constructs a new cross storage client given the url to a hub. By default,
 an iframe is created within the document body that points to the url. It
 also accepts an options object, which may include a timeout, frameId, and
 promise. The timeout, in milliseconds, is applied to each request and
-defaults to 3000ms. The options object may also include a frameId,
+defaults to 5000ms. The options object may also include a frameId,
 identifying an existing frame on which to install its listeners. If the
 promise key is supplied the constructor for a Promise, that Promise library
 will be used instead of the default window.Promise.
