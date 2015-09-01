@@ -19,7 +19,7 @@ var banner = [
 ].join('\n');
 
 var paths = {
-  scripts: './lib/*.js',
+  scripts: ['./lib/client.js', './lib/hub.js'],
   dist: './dist/'
 };
 

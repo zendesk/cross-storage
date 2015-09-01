@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.7.0
+ * @version   0.8.0
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -14,7 +14,7 @@
    * an iframe is created within the document body that points to the url. It
    * also accepts an options object, which may include a timeout, frameId, and
    * promise. The timeout, in milliseconds, is applied to each request and
-   * defaults to 3000ms. The options object may also include a frameId,
+   * defaults to 5000ms. The options object may also include a frameId,
    * identifying an existing frame on which to install its listeners. If the
    * promise key is supplied the constructor for a Promise, that Promise library
    * will be used instead of the default window.Promise.
@@ -56,7 +56,7 @@
     this._connected = false;
     this._closed    = false;
     this._count     = 0;
-    this._timeout   = opts.timeout || 3000;
+    this._timeout   = opts.timeout || 5000;
     this._listener  = null;
 
     this._installListener();
@@ -276,10 +276,12 @@
     this._listener = function(message) {
       var i, error, response;
 
-      if (client._closed) return;
-
-      // Ignore messages not from our hub
-      if (message.origin !== client._origin) return;
+      // Ignore invalid messages, those not from the correct hub, or when
+      // the client has closed
+      if (client._closed || !message.data || typeof message.data !== 'string' ||
+          message.origin !== client._origin) {
+        return;
+      }
 
       // LocalStorage isn't available in the hub
       if (message.data === 'cross-storage:unavailable') {
