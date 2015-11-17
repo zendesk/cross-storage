@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.8.0
+ * @version   0.8.1
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -76,7 +76,10 @@
    * @param {MessageEvent} message A message to be processed
    */
   CrossStorageHub._listener = function(message) {
-    var uri, available, request, method, error, result, response;
+    var origin, targetOrigin, request, method, error, result, response;
+
+    // postMessage returns the string "null" as the origin for "file://"
+    origin = (message.origin === 'null') ? 'file://' : message.origin;
 
     // Handle polling for a ready message
     if (message.data === 'cross-storage:poll') {
@@ -91,7 +94,7 @@
 
     if (!method) {
       return;
-    } else if (!CrossStorageHub._permitted(message.origin, method)) {
+    } else if (!CrossStorageHub._permitted(origin, method)) {
       error = 'Invalid permissions for ' + method;
     } else {
       try {
@@ -107,7 +110,10 @@
       result: result
     });
 
-    window.parent.postMessage(response, message.origin);
+    // postMessage requires that the target origin be set to "*" for "file://"
+    targetOrigin = (origin === 'file://') ? '*' : origin;
+
+    window.parent.postMessage(response, targetOrigin);
   };
 
   /**
@@ -271,7 +277,7 @@
   } else if (typeof exports !== 'undefined') {
     exports.CrossStorageHub = CrossStorageHub;
   } else if (typeof define === 'function' && define.amd) {
-    define('CrossStorageHub', [], function() {
+    define([], function() {
       return CrossStorageHub;
     });
   } else {

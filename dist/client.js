@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.8.0
+ * @version   0.8.1
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -274,14 +274,18 @@
     var client = this;
 
     this._listener = function(message) {
-      var i, error, response;
+      var i, origin, error, response;
 
-      // Ignore invalid messages, those not from the correct hub, or when
-      // the client has closed
-      if (client._closed || !message.data || typeof message.data !== 'string' ||
-          message.origin !== client._origin) {
+      // Ignore invalid messages or those after the client has closed
+      if (client._closed || !message.data || typeof message.data !== 'string') {
         return;
       }
+
+      // postMessage returns the string "null" as the origin for "file://"
+      origin = (message.origin === 'null') ? 'file://' : message.origin;
+
+      // Ignore messages not from the correct origin
+      if (origin !== client._origin) return;
 
       // LocalStorage isn't available in the hub
       if (message.data === 'cross-storage:unavailable') {
@@ -337,14 +341,18 @@
    * establish a connected state.
    */
   CrossStorageClient.prototype._poll = function() {
-    var client, interval;
+    var client, interval, targetOrigin;
 
     client = this;
+
+    // postMessage requires that the target origin be set to "*" for "file://"
+    targetOrigin = (client._origin === 'file://') ? '*' : client._origin;
+
     interval = setInterval(function() {
       if (client._connected) return clearInterval(interval);
       if (!client._hub) return;
 
-      client._hub.postMessage('cross-storage:poll', client._origin);
+      client._hub.postMessage('cross-storage:poll', targetOrigin);
     }, 1000);
   };
 
@@ -405,7 +413,7 @@
     };
 
     return new this._promise(function(resolve, reject) {
-      var timeout, originalToJSON;
+      var timeout, originalToJSON, targetOrigin;
 
       // Timeout if a response isn't received after 4s
       timeout = setTimeout(function() {
@@ -429,8 +437,11 @@
         Array.prototype.toJSON = null;
       }
 
+      // postMessage requires that the target origin be set to "*" for "file://"
+      targetOrigin = (client._origin === 'file://') ? '*' : client._origin;
+
       // Send serialized message
-      client._hub.postMessage(JSON.stringify(req), client._origin);
+      client._hub.postMessage(JSON.stringify(req), targetOrigin);
 
       // Restore original toJSON
       if (originalToJSON) {
@@ -447,7 +458,7 @@
   } else if (typeof exports !== 'undefined') {
     exports.CrossStorageClient = CrossStorageClient;
   } else if (typeof define === 'function' && define.amd) {
-    define('CrossStorageClient', [], function() {
+    define([], function() {
       return CrossStorageClient;
     });
   } else {
