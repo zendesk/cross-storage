@@ -118,6 +118,10 @@ If using inline JS to create the hub, you'll need to specify `unsafe-inline`
 for the CSP headers. Otherwise, it can be left out if simply including the
 init code via another resource.
 
+#### Web Component wrapper
+
+`CrossStorageClient` has a Web Component wrapper, built with Polymer. For more information go [here](https://github.com/firmfirm/f-cross-storage).
+
 ## API
 
 #### CrossStorageHub.init(permissions)
