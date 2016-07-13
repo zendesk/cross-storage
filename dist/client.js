@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.8.1
+ * @version   0.8.2
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -426,6 +426,7 @@
       // Add request callback
       client._requests[req.id] = function(err, result) {
         clearTimeout(timeout);
+        delete client._requests[req.id];
         if (err) return reject(new Error(err));
         resolve(result);
       };

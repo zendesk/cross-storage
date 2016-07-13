@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.8.1
+ * @version   0.8.2
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -89,7 +89,18 @@
     // Ignore the ready message when viewing the hub directly
     if (message.data === 'cross-storage:ready') return;
 
-    request = JSON.parse(message.data);
+    // Check whether message.data is a valid json
+    try {
+      request = JSON.parse(message.data);
+    } catch (err) {
+      return;
+    }
+
+    // Check whether request.method is a string
+    if (!request || typeof request.method !== 'string') {
+      return;
+    }
+
     method = request.method.split('cross-storage:')[1];
 
     if (!method) {
@@ -187,7 +198,12 @@
 
     for (i = 0; i < params.keys.length; i++) {
       key = params.keys[i];
-      item = JSON.parse(storage.getItem(key));
+      
+      try {
+        item = JSON.parse(storage.getItem(key));
+      } catch (e) {
+        item = null;
+      }
 
       if (item === null) {
         result.push(null);
