@@ -270,6 +270,11 @@ storage.onConnect().then(function() {
 });
 ```
 
+**Breaking Changes**
+
+API breaking changes were introduced in both 0.6 and 1.0. Refer to
+[releases](https://github.com/zendesk/cross-storage/releases) for details.
+
 **Notes on Safari 7+ (OSX, iOS)**
 
 All cross-domain local storage access is disabled by default with Safari 7+.

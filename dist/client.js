@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.8.2
+ * @version   1.0.0
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -172,21 +172,18 @@
   };
 
   /**
-   * Sets a key to the specified value, optionally accepting a ttl to passively
-   * expire the key after a number of milliseconds. Returns a promise that is
-   * fulfilled on success, or rejected if any errors setting the key occurred,
-   * or the request timed out.
+   * Sets a key to the specified value. Returns a promise that is fulfilled on
+   * success, or rejected if any errors setting the key occurred, or the request
+   * timed out.
    *
    * @param   {string}  key   The key to set
    * @param   {*}       value The value to assign
-   * @param   {int}     ttl   Time to live in milliseconds
    * @returns {Promise} A promise that is settled on hub response or timeout
    */
-  CrossStorageClient.prototype.set = function(key, value, ttl) {
+  CrossStorageClient.prototype.set = function(key, value) {
     return this._request('set', {
       key:   key,
-      value: value,
-      ttl:   ttl
+      value: value
     });
   };
 

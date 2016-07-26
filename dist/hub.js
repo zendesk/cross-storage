@@ -1,7 +1,7 @@
 /**
  * cross-storage - Cross domain local storage
  *
- * @version   0.8.2
+ * @version   1.0.0
  * @link      https://github.com/zendesk/cross-storage
  * @author    Daniel St. Jules <danielst.jules@gmail.com>
  * @copyright Zendesk
@@ -160,59 +160,36 @@
   };
 
   /**
-   * Sets a key to the specified value. If a ttl is provided, an expiration
-   * timestamp is added to the object to be stored, prior to serialization.
+   * Sets a key to the specified value.
    *
-   * @param {object} params An object with key, value and optional ttl
+   * @param {object} params An object with key and value
    */
   CrossStorageHub._set = function(params) {
-    var ttl, item;
-
-    ttl = params.ttl;
-    if (ttl && parseInt(ttl, 10) !== ttl) {
-      throw new Error('ttl must be a number');
-    }
-
-    item = {value:  params.value};
-    if (ttl) {
-      item.expire = CrossStorageHub._now() + ttl;
-    }
-
-    window.localStorage.setItem(params.key, JSON.stringify(item));
+    window.localStorage.setItem(params.key, params.value);
   };
 
   /**
    * Accepts an object with an array of keys for which to retrieve their values.
    * Returns a single value if only one key was supplied, otherwise it returns
-   * an array. Any keys not set, or expired, result in a null element in the
-   * resulting array.
+   * an array. Any keys not set result in a null element in the resulting array.
    *
    * @param   {object} params An object with an array of keys
    * @returns {*|*[]}  Either a single value, or an array
    */
   CrossStorageHub._get = function(params) {
-    var storage, result, i, item, key;
+    var storage, result, i, value;
 
     storage = window.localStorage;
     result = [];
 
     for (i = 0; i < params.keys.length; i++) {
-      key = params.keys[i];
-      
       try {
-        item = JSON.parse(storage.getItem(key));
+        value = storage.getItem(params.keys[i]);
       } catch (e) {
-        item = null;
+        value = null;
       }
 
-      if (item === null) {
-        result.push(null);
-      } else if (item.expire && item.expire < CrossStorageHub._now()) {
-        storage.removeItem(key);
-        result.push(null);
-      } else {
-        result.push(item.value);
-      }
+      result.push(value);
     }
 
     return (result.length > 1) ? result : result[0];
