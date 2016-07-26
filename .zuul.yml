@@ -24,4 +24,4 @@ browsers:
   - name: android
     version: latest
   - name: iphone
-    version: 7.0..latest
+    version: 8.0
