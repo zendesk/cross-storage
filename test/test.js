@@ -238,6 +238,18 @@ describe('CrossStorageClient', function() {
       })['catch'](done);
     });
 
+    it('can set JSON objects as the value', function(done) {
+      var key = 'key1';
+      var str = JSON.stringify({foo: 'bar'});
+
+      storage.onConnect()
+      .then(setGet(key, str))
+      .then(function(res) {
+        expect(res).to.eql(str);
+        done();
+      })['catch'](done);
+    });
+
     it('can overwrite existing values', function(done) {
       var key = 'key1';
       var value = 'new';
