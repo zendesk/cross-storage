@@ -45,9 +45,9 @@ describe('CrossStorageClient', function() {
     }
   });
 
-  var setGet = function(key, value, ttl) {
+  var setGet = function(key, value) {
     return function() {
-      return storage.set(key, value, ttl).then(function() {
+      return storage.set(key, value).then(function() {
         return storage.get(key);
       });
     };
@@ -205,7 +205,6 @@ describe('CrossStorageClient', function() {
 
     storage.onConnect().then(function() {
       storage.close();
-
       return storage.set('key1', 'new');
     })['catch'](function(err) {
       expect(err.message).to.be('CrossStorageClient has closed');
@@ -219,8 +218,7 @@ describe('CrossStorageClient', function() {
     });
 
     it('returns null when calling get on a non-existent key', function(done) {
-      storage.onConnect()
-      .then(function() {
+      storage.onConnect().then(function() {
         return storage.get('key1');
       }).then(function(res) {
         expect(res).to.be(null);
@@ -240,18 +238,6 @@ describe('CrossStorageClient', function() {
       })['catch'](done);
     });
 
-    it('can set objects as the value', function(done) {
-      var key = 'key1';
-      var object = {foo: 'bar'};
-
-      storage.onConnect()
-      .then(setGet(key, object))
-      .then(function(res) {
-        expect(res).to.eql(object);
-        done();
-      })['catch'](done);
-    });
-
     it('can overwrite existing values', function(done) {
       var key = 'key1';
       var value = 'new';
@@ -262,28 +248,6 @@ describe('CrossStorageClient', function() {
       .then(setGet(key, value))
       .then(function(res) {
         expect(res).to.eql(value);
-        done();
-      })['catch'](done);
-    });
-
-    it('can set a ttl on the key', function(done) {
-      var key = 'key1';
-      var value = 'foobar';
-
-      var delay = function() {
-        // Delay by 100ms
-        return new Promise(function(resolve, reject) {
-          setTimeout(resolve, 100);
-        });
-      };
-
-      storage.onConnect()
-      .then(setGet(key, value, 50))
-      .then(delay)
-      .then(function() {
-        return storage.get(key);
-      }).then(function(res) {
-        expect(res).to.be(null);
         done();
       })['catch'](done);
     });
