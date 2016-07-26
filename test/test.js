@@ -80,6 +80,11 @@ describe('CrossStorageClient', function() {
       expect(storage._timeout).to.be(10000);
     });
 
+    it('sets rawMode to opts.rawMode, if provided', function() {
+        var storage = new CrossStorageClient(url, {rawMode: true});
+        expect(storage._rawMode).to.be(true);
+    })
+
     it('sets its connected status to false', function() {
       var storage = new CrossStorageClient(url);
       expect(storage._connected).to.be(false);
@@ -250,6 +255,19 @@ describe('CrossStorageClient', function() {
         expect(res).to.eql(object);
         done();
       })['catch'](done);
+    });
+
+    it('can set raw values instead of serializing in raw mode', function(done) {
+        var key = 'key1';
+        var value = 'foo';
+
+        var storage = new CrossStorageClient(url, { rawMode: true });
+        storage.onConnect()
+        .then(setGet(key, value))
+        .then(function(res) {
+            expect(res).to.eql(value);
+            done();
+        })['catch'](done);
     });
 
     it('can overwrite existing values', function(done) {
