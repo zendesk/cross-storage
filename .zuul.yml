@@ -18,10 +18,10 @@ browsers:
     version: latest
     platform: Linux
   - name: safari
-    version: 5..7
+    version: 7
   - name: ie
     version: 8..latest
   - name: android
     version: latest
   - name: iphone
-    version: 7.0..latest
+    version: 8.0

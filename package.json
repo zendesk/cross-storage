@@ -1,6 +1,6 @@
 {
   "name": "cross-storage",
-  "version": "0.8.1",
+  "version": "1.0.0",
   "description": "Cross domain local storage",
   "keywords": [
     "local",
@@ -26,7 +26,7 @@
     "gulp-header": "^1.1.1",
     "gulp-rimraf": "^0.1.0",
     "serve-static": "^1.5.3",
-    "zuul": "~1.16.0"
+    "zuul": "~3.10.1"
   },
   "scripts": {
     "test": "./node_modules/.bin/zuul --local 8080 --ui mocha-bdd -- test/test.js",

@@ -12,7 +12,7 @@ Features an API using ES6 promises.
   * [CrossStorageHub.init(permissions)](#crossstoragehubinitpermissions)
   * [new CrossStorageClient(url, \[opts\])](#new-crossstorageclienturl-opts)
   * [CrossStorageClient.prototype.onConnect()](#crossstorageclientprototypeonconnect)
-  * [CrossStorageClient.prototype.set(key, value, \[ttl\])](#crossstorageclientprototypesetkey-value-ttl)
+  * [CrossStorageClient.prototype.set(key, value)](#crossstorageclientprototypesetkey-value)
   * [CrossStorageClient.prototype.get(key1, \[key2\], \[...\])](#crossstorageclientprototypegetkey1-key2-)
   * [CrossStorageClient.prototype.del(key1, \[key2\], \[...\])](#crossstorageclientprototypedelkey1-key2-)
   * [CrossStorageClient.prototype.getKeys()](#crossstorageclientprototypegetkeys)
@@ -68,8 +68,7 @@ invalid.example.com.malicious.com.
 var storage = new CrossStorageClient('https://store.example.com/hub.html');
 
 storage.onConnect().then(function() {
-  // Set a key with a TTL of 90 seconds
-  return storage.set('newKey', 'foobar', 90000);
+  return storage.set('newKey', 'foobar');
 }).then(function() {
   return storage.get('existingKey', 'newKey');
 }).then(function(res) {
@@ -171,18 +170,15 @@ storage.onConnect().then(function() {
 });
 ```
 
-#### CrossStorageClient.prototype.set(key, value, [ttl])
+#### CrossStorageClient.prototype.set(key, value)
 
-Sets a key to the specified value, optionally accepting a ttl to passively
-expire the key after a number of milliseconds. Returns a promise that is
-fulfilled on success, or rejected if any errors setting the key occurred,
-or the request timed out.
+Sets a key to the specified value. Returns a promise that is fulfilled on
+success, or rejected if any errors setting the key occurred, or the request
+timed out.
 
 ``` javascript
 storage.onConnect().then(function() {
-  return storage.set('key', {foo: 'bar'});
-}).then(function() {
-  return storage.set('expiringKey', 'foobar', 10000);
+  return storage.set('key', JSON.stringify({foo: 'bar'}));
 });
 ```
 
@@ -278,6 +274,11 @@ storage.onConnect().then(function() {
 });
 ```
 
+**Breaking Changes**
+
+API breaking changes were introduced in both 0.6 and 1.0. Refer to
+[releases](https://github.com/zendesk/cross-storage/releases) for details.
+
 **Notes on Safari 7+ (OSX, iOS)**
 
 All cross-domain local storage access is disabled by default with Safari 7+.
@@ -299,8 +300,7 @@ If you need to maximize your storage space, consider using
 [lz-string](https://github.com/pieroxy/lz-string/). For smaller strings, it's
 not uncommon to see a 50% reduction in size when compressed, which will bring
 you a lot closer to 5 million characters. At that point, you're only limited by
-the average compression rate of your strings, as well as the minor overhead
-produced by the serialization format used by the library: JSON.
+the average compression rate of your strings.
 
 ## Building
 
@@ -315,7 +315,7 @@ the Travis CI build uses Sauce Labs for multi-browser testing as well.
 
 ## Copyright and license
 
-Copyright 2014 Zendesk
+Copyright 2016 Zendesk
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License.
