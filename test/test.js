@@ -398,5 +398,57 @@ describe('CrossStorageClient', function() {
         done()
       })['catch'](done);
     });
+
+    it('can unlisten to updates', function(done) {
+      var keys = ['key1', 'key2'];
+      var values = ['foo', 'bar'];
+      var storageEvents1 = [];
+      var storageEvents2 = [];
+      var otherStorage = new CrossStorageClient(url, {timeout: 10000});
+      var eventListenerKey;
+
+      storage.onConnect()
+      .then(function(){return otherStorage.onConnect()})
+      .then(function(){
+        return Promise.all([
+          storage.listen(function(evt){storageEvents1.push(evt)}),
+          otherStorage.listen(function(evt){storageEvents2.push(evt)}).then(function(key){eventListenerKey = key})
+        ]);
+      })
+      .then(setGet(keys[0], values[0]))
+      .then(timeoutPromise(100))
+      .then(function(){
+        expect(storageEvents1).to.have.length(0);
+        expect(storageEvents2).to.eql([{
+          key: keys[0],
+          newValue: 'foo',
+          oldValue: null,
+          url: url
+        }]);
+        storageEvents2.pop();
+        return otherStorage.unlisten(eventListenerKey)
+      })
+      .then(setGet(keys[0], values[1]))
+      .then(timeoutPromise(100))
+      .then(function(){
+        expect(storageEvents1).to.have.length(0);
+        expect(storageEvents2).to.have.length(0);
+        storageEvents2.pop();
+      })
+      .then(function() {
+        otherStorage.del(keys[0]);
+      })
+      .then(timeoutPromise(100))
+      .then(function(){
+        expect(storageEvents2).to.have.length(0);
+        expect(storageEvents1).to.eql([{
+          key: keys[0],
+          newValue: null,
+          oldValue: "bar",
+          url: url
+        }]);
+        done()
+      })['catch'](done);
+    });
   });
 });
