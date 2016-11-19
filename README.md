@@ -18,6 +18,8 @@ Features an API using ES6 promises.
   * [CrossStorageClient.prototype.getKeys()](#crossstorageclientprototypegetkeys)
   * [CrossStorageClient.prototype.clear()](#crossstorageclientprototypeclear)
   * [CrossStorageClient.prototype.close()](#crossstorageclientprototypeclose)
+  * [CrossStorageClient.prototype.listen(callback)](#crossstorageclientprototypelisten)
+  * [CrossStorageClient.prototype.unlisten(key)](#crossstorageclientprototypeunlisten)
 * [Compatibility](#compatibility)
 * [Compression](#compression)
 * [Building](#building)
@@ -244,6 +246,34 @@ storage.onConnect().then(function() {
 }).then(function() {
   storage.close();
 });
+```
+
+#### CrossStorageClient.prototype.listen(callback)
+
+Adds an event listener to the `storage` event in the hub. All `storage` events 
+will be sent to the client and used to call the given callback.
+
+The callback will be called on each `storage` event, with an object with the 
+keys `key`, `newValue`, `oldValue` and `url` taken from the original event.
+
+``` javascript
+var storageEventListenerKey;
+storage.onConnect().then(function() {
+  return storage.listen(console.log);
+}).then(function(key) {
+  storageEventListenerKey = key 
+});
+```
+
+#### CrossStorageClient.prototype.unlisten(eventKey)
+
+Removes the storage event listener.
+   
+The client will ignore any events as soon as this is called. Returns a promise
+that is settled on successful event listener removal from the hub.
+
+``` javascript
+storage.unlisten(storageEventListenerKey);
 ```
 
 ## Compatibility
