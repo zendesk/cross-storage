@@ -127,12 +127,12 @@ Accepts an array of objects with two keys: origin and allow. The value
 of origin is expected to be a RegExp, and allow, an array of strings.
 The cross storage hub is then initialized to accept requests from any of
 the matching origins, allowing access to the associated lists of methods.
-Methods may include any of: get, set, del, getKeys and clear. A 'ready'
+Methods may include any of: get, set, del, getKeys, clear and listen. A 'ready'
 message is sent to the parent window once complete.
 
 ``` javascript
 CrossStorageHub.init([
-  {origin: /localhost:3000$/, allow: ['get', 'set', 'del', 'getKeys', 'clear']}
+  {origin: /localhost:3000$/, allow: ['get', 'set', 'del', 'getKeys', 'clear', 'listen']}
 ]);
 ```
 
