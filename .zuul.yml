@@ -2,7 +2,7 @@ ui: mocha-bdd
 server: "./test/server.js"
 concurrency: 1
 scripts:
-  - "test/es6-promise.min.js"
+  - "test/es6-promise.auto.min.js"
   - "lib/client.js"
 browsers:
   - name: chrome
