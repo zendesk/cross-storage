@@ -459,7 +459,6 @@
     define([], function() {
       return CrossStorageClient;
     });
-  } else {
-    root.CrossStorageClient = CrossStorageClient;
   }
+  root.CrossStorageClient = CrossStorageClient;
 }(this));
