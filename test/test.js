@@ -53,6 +53,14 @@ describe('CrossStorageClient', function() {
     };
   };
 
+  var timeoutPromise = function(timeout) {
+    return function() {
+      return new Promise(function(resolve) {
+        window.setTimeout(resolve, timeout);
+      });
+    };
+  };
+
   // Used to delete keys before each test
   var cleanup = function(fn) {
     storage.onConnect().then(function() {
@@ -330,6 +338,79 @@ describe('CrossStorageClient', function() {
         // key order varies in some browsers
         expect(res).to.have.length(2);
         expect(res).to.contain(keys[0], keys[1]);
+        done();
+      })['catch'](done);
+    });
+
+    it('can listen to updates', function(done) {
+      var key = 'foo';
+      var value = 'bar';
+      var storageEvents1 = [];
+      var storageEvents2 = [];
+      var otherStorage = new CrossStorageClient(url, {timeout: 10000});
+
+      var listen = function() {
+        return Promise.all([
+          storage.listen(function(evt) {
+            storageEvents1.push(evt)
+          }),
+          otherStorage.listen(function(evt) {
+            storageEvents2.push(evt)
+          })
+        ]);
+      };
+
+      Promise.all([
+        storage.onConnect(),
+        otherStorage.onConnect()
+      ])
+      .then(listen)
+      .then(setGet(key, value))
+      .then(timeoutPromise(100))
+      .then(function() {
+        expect(storageEvents1).to.have.length(0);
+        expect(storageEvents2).to.eql([{
+          key: key,
+          newValue: value,
+          oldValue: null,
+          url: url
+        }]);
+        done();
+      })['catch'](done);
+    });
+
+    it('can unlisten to updates', function(done) {
+      var storageEvents1 = [];
+      var storageEvents2 = [];
+      var otherStorage = new CrossStorageClient(url, {timeout: 10000});
+      var listenerId;
+
+      var listen = function() {
+        return Promise.all([
+          storage.listen(function(evt) {
+            storageEvents1.push(evt)
+          }),
+          otherStorage.listen(function(evt) {
+            storageEvents2.push(evt)
+          }).then(function(key){
+            listenerId = key
+          })
+        ]);
+      };
+
+      Promise.all([
+        storage.onConnect(),
+        otherStorage.onConnect()
+      ])
+      .then(listen)
+      .then(function() {
+        return otherStorage.unlisten(listenerId);
+      })
+      .then(setGet('foo', 'bar'))
+      .then(timeoutPromise(100))
+      .then(function() {
+        expect(storageEvents1).to.have.length(0);
+        expect(storageEvents2).to.have.length(0);
         done();
       })['catch'](done);
     });
