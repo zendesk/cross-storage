@@ -217,7 +217,7 @@
   };
 
   /**
-   * Returns a promise that, when resolved, indicates that all localStorage
+   * Returns a promise that, when resolved, indicates that all storage
    * data has been cleared.
    *
    * @returns {Promise} A promise that is settled on hub response or timeout
@@ -284,12 +284,12 @@
       // Ignore messages not from the correct origin
       if (origin !== client._origin) return;
 
-      // LocalStorage isn't available in the hub
+      // Underlying storage isn't available in the hub
       if (message.data === 'cross-storage:unavailable') {
         if (!client._closed) client.close();
         if (!client._requests.connect) return;
 
-        error = new Error('Closing client. Could not access localStorage in hub.');
+        error = new Error('Closing client. Could not access underlying storage in hub.');
         for (i = 0; i < client._requests.connect.length; i++) {
           client._requests.connect[i](error);
         }

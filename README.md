@@ -9,7 +9,7 @@ Features an API using ES6 promises.
 * [Overview](#overview)
 * [Installation](#installation)
 * [API](#api)
-  * [CrossStorageHub.init(permissions)](#crossstoragehubinitpermissions)
+  * [CrossStorageHub.init(opts)](#crossstoragehubinitopts)
   * [new CrossStorageClient(url, \[opts\])](#new-crossstorageclienturl-opts)
   * [CrossStorageClient.prototype.onConnect()](#crossstorageclientprototypeonconnect)
   * [CrossStorageClient.prototype.set(key, value)](#crossstorageclientprototypesetkey-value)
@@ -30,13 +30,13 @@ The library is a convenient alternative to sharing a root domain cookie.
 Unlike cookies, your client-side data isn't limited to a few kilobytes - you
 get up to 2.49M chars. For a client-heavy application, you can potentially
 shave a few KB off your request headers by avoiding cookies. This is all thanks
-to LocalStorage, which is available in IE 8+, FF 3.5+, Chrome 4+, as well as a
+to LocalStorage / SessionStorage API, which is available in IE 8+, FF 3.5+, Chrome 4+, as well as a
 majority of mobile browsers. For a list of compatible browsers, refer to
 [caniuse](http://caniuse.com/#feat=namevalue-storage).
 
 How does it work? The library is divided into two types of components: hubs
 and clients. The hubs reside on a host of choice and interact directly with
-the LocalStorage API. The clients then load said hub over an embedded iframe
+the LocalStorage / SessionStorage API. The clients then load said hub over an embedded iframe
 and post messages, requesting data to be stored, retrieved, and deleted. This
 allows multiple clients to access and share the data located in a single store.
 
@@ -119,10 +119,13 @@ init code via another resource.
 
 ## API
 
-#### CrossStorageHub.init(permissions)
+#### CrossStorageHub.init(opts)
 
-Accepts an array of objects with two keys: origin and allow. The value
+Accepts an option object, which may include a permissions and a storage
+The permissions is an array of objects with two keys: origin and allow. The value
 of origin is expected to be a RegExp, and allow, an array of strings.
+The storage option can be one of `window.localStorage`
+or `window.sessionStorage`. Default is window.localStorage (if supported).
 The cross storage hub is then initialized to accept requests from any of
 the matching origins, allowing access to the associated lists of methods.
 Methods may include any of: get, set, del, getKeys and clear. A 'ready'
@@ -222,7 +225,7 @@ storage.onConnect().then(function() {
 
 #### CrossStorageClient.prototype.clear()
 
-Returns a promise that, when resolved, indicates that all localStorage
+Returns a promise that, when resolved, indicates that all storage
 data has been cleared.
 
 ``` javascript
@@ -283,7 +286,7 @@ cookies for those user agents, or requesting the data from a server-side store.
 
 ## Compression
 
-Most localStorage-compatible browsers offer at least ~5Mb of storage. But keys
+Most localStorage/sessionStorage-compatible browsers offer at least ~5Mb of storage. But keys
 and values are defined as DOMStrings, which are UTF-8 encoded using single
 16-bit sequences. That means a string of ~2.5 million ASCII characters will use
 up ~5Mb, since they're 2 bytes per char.
