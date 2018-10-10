@@ -26,15 +26,22 @@
    *   {origin: /:(www\.)?example.com$/, allow: ['get', 'set', 'del']}
    * ]);
    *
-   * @param {array} permissions An array of objects with origin and allow
+   * @param {object} [opts] An optional object containing additional options,
+   *                        including timeout, frameId, and promise
+   * 
+   * @param {array} _permissions An array of objects with origin and allow
    */
-  CrossStorageHub.init = function(permissions) {
+  CrossStorageHub.init = function(opts) {
+    opts = opts || {};
+
+    CrossStorageHub._storage = opts.storage || window.localStorage;
+
     var available = true;
 
-    // Return if localStorage is unavailable, or third party
+    // Return if storage is unavailable, or third party
     // access is disabled
     try {
-      if (!window.localStorage) available = false;
+      if (!CrossStorageHub._storage) available = false;
     } catch (e) {
       available = false;
     }
@@ -47,7 +54,7 @@
       }
     }
 
-    CrossStorageHub._permissions = permissions || [];
+    CrossStorageHub._permissions = opts.permissions || [];
     CrossStorageHub._installListener();
     window.parent.postMessage('cross-storage:ready', '*');
   };
@@ -165,7 +172,7 @@
    * @param {object} params An object with key and value
    */
   CrossStorageHub._set = function(params) {
-    window.localStorage.setItem(params.key, params.value);
+    CrossStorageHub._storage.setItem(params.key, params.value);
   };
 
   /**
@@ -179,7 +186,7 @@
   CrossStorageHub._get = function(params) {
     var storage, result, i, value;
 
-    storage = window.localStorage;
+    storage = CrossStorageHub._storage;
     result = [];
 
     for (i = 0; i < params.keys.length; i++) {
@@ -202,19 +209,19 @@
    */
   CrossStorageHub._del = function(params) {
     for (var i = 0; i < params.keys.length; i++) {
-      window.localStorage.removeItem(params.keys[i]);
+      CrossStorageHub._storage.removeItem(params.keys[i]);
     }
   };
 
   /**
-   * Clears localStorage.
+   * Clears storage.
    */
   CrossStorageHub._clear = function() {
-    window.localStorage.clear();
+    CrossStorageHub._storage.clear();
   };
 
   /**
-   * Returns an array of all keys stored in localStorage.
+   * Returns an array of all keys stored in storage.
    *
    * @returns {string[]} The array of keys
    */
@@ -222,10 +229,10 @@
     var i, length, keys;
 
     keys = [];
-    length = window.localStorage.length;
+    length = CrossStorageHub._storage.length;
 
     for (i = 0; i < length; i++) {
-      keys.push(window.localStorage.key(i));
+      keys.push(CrossStorageHub._storage.key(i));
     }
 
     return keys;
