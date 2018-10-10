@@ -1,0 +1,15 @@
+<!doctype html>
+<head>
+  <title>Cross Storage Hub</title>
+</head>
+<body>
+  <script type="text/javascript" src="../lib/hub.js"></script>
+  <script>
+    CrossStorageHub.init({
+      storage: window.sessionStorage,
+      permissions: [
+        {origin: /.*/, allow: ['get', 'set', 'del', 'clear', 'getKeys']}
+      ]
+    });
+  </script>
+</html>
