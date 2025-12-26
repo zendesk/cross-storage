@@ -17,6 +17,8 @@ Features an API using ES6 promises.
   * [CrossStorageClient.prototype.del(key1, \[key2\], \[...\])](#crossstorageclientprototypedelkey1-key2-)
   * [CrossStorageClient.prototype.getKeys()](#crossstorageclientprototypegetkeys)
   * [CrossStorageClient.prototype.clear()](#crossstorageclientprototypeclear)
+  * [CrossStorageClient.prototype.listen(callback)](#crossstorageclientprototypelisten)
+  * [CrossStorageClient.prototype.unlisten(key)](#crossstorageclientprototypeunlisten)
   * [CrossStorageClient.prototype.close()](#crossstorageclientprototypeclose)
 * [Compatibility](#compatibility)
 * [Compression](#compression)
@@ -125,12 +127,12 @@ Accepts an array of objects with two keys: origin and allow. The value
 of origin is expected to be a RegExp, and allow, an array of strings.
 The cross storage hub is then initialized to accept requests from any of
 the matching origins, allowing access to the associated lists of methods.
-Methods may include any of: get, set, del, getKeys and clear. A 'ready'
+Methods may include any of: get, set, del, getKeys, clear and listen. A 'ready'
 message is sent to the parent window once complete.
 
 ``` javascript
 CrossStorageHub.init([
-  {origin: /localhost:3000$/, allow: ['get', 'set', 'del', 'getKeys', 'clear']}
+  {origin: /localhost:3000$/, allow: ['get', 'set', 'del', 'getKeys', 'clear', 'listen']}
 ]);
 ```
 
@@ -229,6 +231,34 @@ data has been cleared.
 storage.onConnect().then(function() {
   return storage.clear();
 });
+```
+
+#### CrossStorageClient.prototype.listen(fn)
+
+Adds an event listener to the storage event in the hub. The callback will
+be invoked on any storage event not originating from that client. The
+callback will be invoked with an object containing the following keys taken
+from the original event: `key`, `newValue`, `oldValue` and `url`. Returns a
+promise that resolves to a listener id that can be used to unregister the
+listener.
+
+``` javascript
+storage.onConnect().then(function() {
+  return storage.listen(function(event) {
+    console.log(event);
+  });
+}).then(function(id) {
+  // id can be passed to storage.unlisten
+});
+```
+
+#### CrossStorageClient.prototype.unlisten(id)
+
+Removes the registered listener with the supplied id. Returns a promise
+that resolves on completion.
+
+``` javascript
+storage.unlisten(id);
 ```
 
 #### CrossStorageClient.prototype.close()
